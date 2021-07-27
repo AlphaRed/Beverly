@@ -1,44 +1,11 @@
-#include <SDL.h>
-#include <SDL_image.h>
-#include <stdio.h>
-
+#include"common.h"
+#include "events.h"
 #include "gfx.h"
 #include "system.h"
 
-typedef struct
-{
-    int x;
-    int y;
-} ShipStruct;
-
 ShipStruct player;
 
-int checkEvents(SDL_Event e)
-{
-    if(e.type == SDL_QUIT)
-        return 0;
-    else if(e.type == SDL_KEYDOWN)
-    {
-        switch(e.key.keysym.sym)
-        {
-            case SDLK_a: player.x -= 10;
-                break;
-            case SDLK_d: player.x += 10;
-                break;
-            default:
-                break;
-        }
-        return 1;    
-    }
-}
-
-void boundCheck(int *x, int *y)
-{
-    if(*x < 0)
-        *x = 0;
-    if(*x > SCREEN_WIDTH - (TILE_SIZE * 2))
-        *x = SCREEN_WIDTH - (TILE_SIZE * 2);
-}
+SDL_Color textColour = {255, 255, 255}; // white
 
 int main(int argc, char *args[])
 {
@@ -60,45 +27,48 @@ int main(int argc, char *args[])
         printf("IMG library failed to initialize.\n");
         return 1;
     }
+    if(initTTF())
+    {
+        printf("TTF library failed to initialize.\n");
+        return 1;
+    }
     
     //SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, 0);
     //SDL_RenderSetLogicalSize(renderer, 320, 240);
     
     // Load in tile map and setup individual tiles
-    SDL_Texture *tiles = loadImage("art/tiles.png", renderer);
-    if(tiles == NULL)
+    SDL_Texture *bg = loadImage("art/bg.png", renderer);
+    if(bg == NULL)
         printf("Image failed to load.\n");
 
-    SDL_Rect bgTile = initTile(0, 0);
-    SDL_Rect shipTile = initTile(16, 0);
-    SDL_Rect enemyTileA = initTile(32, 0);
-    SDL_Rect enemyTileB = initTile(48, 0);
-    SDL_Rect enemyTileC = initTile(64, 0);
+    TTF_Font *font = TTF_OpenFont("art/clacon.ttf", 12);
+    if(font == NULL)
+        printf("Font failed to load.\n");
+
+    SDL_Surface *textSurface = TTF_RenderText_Solid(font, "Hello World!", textColour);
+    SDL_Texture *t = SDL_CreateTextureFromSurface(renderer, textSurface);
+    SDL_Rect textRect;
+    textRect.x = 0;
+    textRect.y = 0;
+    textRect.w = 400;
+    textRect.h = 100;
 
     int quit = 1;
     SDL_Event e;
-
-    // Setup inital player
-    player.x = (SCREEN_WIDTH / 2) - TILE_SIZE;
-    player.y = SCREEN_HEIGHT - (TILE_SIZE * 6);
 
     // Game loop
     while(quit)
     {   
         // Input
         SDL_PollEvent(&e);
-        quit = checkEvents(e);
+        quit = checkEvents(e, &player);
 
         // Logic
-        boundCheck(&player.x, &player.y);
 
         // Render
-        blitTile(tiles, renderer, bgTile, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        blitTile(tiles, renderer, shipTile, player.x, player.y, TILE_SIZE * 2, TILE_SIZE * 2);
-        //blitTile(tiles, renderer, enemyTileA, 0, 0, TILE_SIZE * 2, TILE_SIZE * 2);
-        //blitTile(tiles, renderer, enemyTileB, 32, 0, TILE_SIZE * 2, TILE_SIZE * 2);
-        //blitTile(tiles, renderer, enemyTileC, 64, 0, TILE_SIZE * 2, TILE_SIZE * 2);
-
+        blitImage(bg, renderer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        SDL_RenderCopy(renderer, t, NULL, &textRect);
+        
         SDL_RenderPresent(renderer);
     }
 

@@ -1,7 +1,4 @@
-#include <SDL.h>
-#include <SDL_image.h>
-#include <stdio.h>
-
+#include"common.h"
 #include "system.h"
 
 SDL_Window *initSDL()
@@ -29,11 +26,21 @@ int initIMG()
     return 0;
 }
 
+int initTTF()
+{
+    if(TTF_Init() < 0)
+    {
+        printf("SDL_TTF library failed to initialize: %s", TTF_GetError());
+        return 1;
+    }
+}
+
 void cleanup(SDL_Window *w, SDL_Renderer *r)
 {
     SDL_DestroyRenderer(r);
     SDL_DestroyWindow(w);
     IMG_Quit();
+    TTF_Quit();
     SDL_Quit();
 }
 

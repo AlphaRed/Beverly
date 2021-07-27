@@ -1,7 +1,4 @@
-#include <SDL.h>
-#include <SDL_image.h>
-#include <stdio.h>
-
+#include"common.h"
 #include "gfx.h"
 
 SDL_Texture *loadImage(char *filename, SDL_Renderer *r)
@@ -37,4 +34,10 @@ void blitTile(SDL_Texture *image, SDL_Renderer *dest, SDL_Rect tile, int x, int 
     destRect.h = h;
 
     SDL_RenderCopy(dest, image, &tile, &destRect);
+}
+
+void drawShip(SDL_Texture *t, SDL_Renderer *r, ShipStruct s)
+{
+    if(s.draw == 0)
+        blitTile(t, r, s.sprite, s.x, s.y, TILE_SIZE *2, TILE_SIZE *2);
 }
