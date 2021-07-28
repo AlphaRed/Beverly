@@ -26,31 +26,21 @@ int initIMG()
     return 0;
 }
 
-int initTTF()
+void cleanup(SDL_Window *w)
 {
-    if(TTF_Init() < 0)
-    {
-        printf("SDL_TTF library failed to initialize: %s", TTF_GetError());
-        return 1;
-    }
-}
-
-void cleanup(SDL_Window *w, SDL_Renderer *r)
-{
-    SDL_DestroyRenderer(r);
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(w);
     IMG_Quit();
-    TTF_Quit();
     SDL_Quit();
 }
 
-SDL_Rect initTile(int x, int y)
+SDL_Rect initTile(int x, int y, int w, int h)
 {
     SDL_Rect tileRect;
     tileRect.x = x;
     tileRect.y = y;
-    tileRect.w = TILE_SIZE;
-    tileRect.h = TILE_SIZE;
+    tileRect.w = w;
+    tileRect.h = h;
 
     return tileRect;
 }

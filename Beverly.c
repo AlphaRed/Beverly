@@ -5,8 +5,6 @@
 
 ShipStruct player;
 
-SDL_Color textColour = {255, 255, 255}; // white
-
 int main(int argc, char *args[])
 {
     // SDL and window setup
@@ -16,7 +14,7 @@ int main(int argc, char *args[])
         printf("Window failed to be created: %s\n", SDL_GetError());
         return 1;
     }
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if(renderer == NULL)
     {
         printf("Renderer failed to be created: %s\n", SDL_GetError());
@@ -27,51 +25,46 @@ int main(int argc, char *args[])
         printf("IMG library failed to initialize.\n");
         return 1;
     }
-    if(initTTF())
-    {
-        printf("TTF library failed to initialize.\n");
-        return 1;
-    }
     
     //SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, 0);
     //SDL_RenderSetLogicalSize(renderer, 320, 240);
     
-    // Load in tile map and setup individual tiles
-    SDL_Texture *bg = loadImage("art/bg.png", renderer);
+    // Load in images and tiles
+    SDL_Texture *bg = loadImage("art/bg.png");
     if(bg == NULL)
         printf("Image failed to load.\n");
 
-    TTF_Font *font = TTF_OpenFont("art/clacon.ttf", 12);
+    font = loadImage("art/font.png");
     if(font == NULL)
-        printf("Font failed to load.\n");
-
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font, "Hello World!", textColour);
-    SDL_Texture *t = SDL_CreateTextureFromSurface(renderer, textSurface);
-    SDL_Rect textRect;
-    textRect.x = 0;
-    textRect.y = 0;
-    textRect.w = 400;
-    textRect.h = 100;
+        printf("Image filed to load.\n");
 
     int quit = 1;
     SDL_Event e;
+
+    SDL_Rect test;
+    test.x = 100;
+    test.y = 100;
+    test.w = 8 * 2;
+    test.h = 12 * 2;
+
+    char i;
 
     // Game loop
     while(quit)
     {   
         // Input
         SDL_PollEvent(&e);
-        quit = checkEvents(e, &player);
+        quit = checkEvents(e, &player);        
 
         // Logic
 
         // Render
-        blitImage(bg, renderer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        SDL_RenderCopy(renderer, t, NULL, &textRect);
+        blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        drawLetter('q', test);
         
         SDL_RenderPresent(renderer);
     }
 
-    cleanup(window, renderer);
+    cleanup(window);
     return 0;
 }

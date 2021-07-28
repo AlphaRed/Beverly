@@ -4,7 +4,7 @@
 SDL_Window *initSDL();
 int initIMG();
 int initTTF();
-void cleanup(SDL_Window *w, SDL_Renderer *r);
-SDL_Rect initTile(int x, int y);
+void cleanup(SDL_Window *w);
+SDL_Rect initTile(int x, int y, int w, int h);
 
 #endif

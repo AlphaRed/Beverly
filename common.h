@@ -3,7 +3,6 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
-#include <SDL_ttf.h>
 #include <stdio.h>
 
 #define SCREEN_WIDTH 640
@@ -18,5 +17,8 @@ typedef struct
     SDL_Rect sprite;
     int draw;
 } ShipStruct;
+
+SDL_Renderer *renderer; // somethings were meant to be global
+SDL_Texture *font;
 
 #endif
