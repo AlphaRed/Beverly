@@ -34,6 +34,10 @@ int main(int argc, char *args[])
     if(bg == NULL)
         printf("BG image failed to load.\n");
 
+    SDL_Texture *bust = loadImage("art/bust.png");
+    if(bust == NULL)
+        printf("Bust image failed to load.\n");
+
     font = loadImage("art/font-ascii.png");
     if(font == NULL)
         printf("Font image filed to load.\n");
@@ -42,14 +46,6 @@ int main(int argc, char *args[])
 
     int quit = 1;
     SDL_Event e;
-
-    SDL_Rect drawLoc;
-    drawLoc.x = 0;
-    drawLoc.y = 0;
-    drawLoc.w = 8 * 4; // scaled by 4x for now
-    drawLoc.h = 12 * 4;
-
-    char c = 'A';
 
     // Game loop
     while(quit)
@@ -62,7 +58,9 @@ int main(int argc, char *args[])
 
         // Render
         blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        drawLetter(c, drawLoc);
+        blitImage(bust, 176, 110, 76, 117);
+        drawString("Welcome...Otacon.", 0);
+        drawString("We have been waiting.", 12 * 4);
         //SDL_Delay(100);
         
         SDL_RenderPresent(renderer);
