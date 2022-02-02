@@ -5,5 +5,6 @@ SDL_Texture *loadImage(char *filename);
 void blitImage(SDL_Texture *image, int x, int y, int w, int h);
 void blitTile(SDL_Texture *image, int x, int y, int w, int h, SDL_Rect destRect);
 void drawLetter(char c, SDL_Rect destRect);
+void setupFontTiles(SDL_Rect f[], int num);
 
 #endif

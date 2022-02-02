@@ -32,35 +32,38 @@ int main(int argc, char *args[])
     // Load in images and tiles
     SDL_Texture *bg = loadImage("art/bg.png");
     if(bg == NULL)
-        printf("Image failed to load.\n");
+        printf("BG image failed to load.\n");
 
-    font = loadImage("art/font.png");
+    font = loadImage("art/font-ascii.png");
     if(font == NULL)
-        printf("Image filed to load.\n");
+        printf("Font image filed to load.\n");
+    
+    setupFontTiles(fontTiles, FONT_NUM);
 
     int quit = 1;
     SDL_Event e;
 
-    SDL_Rect test;
-    test.x = 100;
-    test.y = 100;
-    test.w = 8 * 2;
-    test.h = 12 * 2;
+    SDL_Rect drawLoc;
+    drawLoc.x = 0;
+    drawLoc.y = 0;
+    drawLoc.w = 8 * 4; // scaled by 4x for now
+    drawLoc.h = 12 * 4;
 
-    char i;
+    char c = 'A';
 
     // Game loop
     while(quit)
     {   
         // Input
         SDL_PollEvent(&e);
-        quit = checkEvents(e, &player);        
+        quit = checkEvents(e, &player);
 
         // Logic
 
         // Render
         blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        drawLetter('q', test);
+        drawLetter(c, drawLoc);
+        //SDL_Delay(100);
         
         SDL_RenderPresent(renderer);
     }
