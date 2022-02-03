@@ -10,6 +10,7 @@
 #define TILE_SIZE 32
 #define TILE_SCALE 2
 #define FONT_NUM 200
+#define MAX_FPS 60
 
 typedef struct
 {

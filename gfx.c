@@ -36,7 +36,7 @@ void blitTile(SDL_Texture *image, int x, int y, int w, int h, SDL_Rect destRect)
     SDL_RenderCopy(renderer, image, &srcRect, &destRect);
 }
 
-void drawLetter(char c, int x, int y)
+void drawLetter(char c, int x, int y, int s)
 {
     //int x = ((c - 32) % 8) * 8; // ASCII starts at char = 32, font width = 8px
     //int y = ((c - 32) / 16) * 12; // ASCII starts at char = 32, num of chars in width = 16, font height = 12px
@@ -44,8 +44,8 @@ void drawLetter(char c, int x, int y)
     SDL_Rect destRect;
     destRect.x = x;
     destRect.y = y;
-    destRect.w = 8 * 4;
-    destRect.h = 12 * 4;
+    destRect.w = 8 * s;
+    destRect.h = 12 * s;
     
     int fontIndex = c - 32; // ASCII starts at character #32
     blitTile(font, fontTiles[fontIndex].x, fontTiles[fontIndex].y, fontTiles[fontIndex].w, fontTiles[fontIndex].h, destRect);
@@ -73,10 +73,36 @@ void drawString(char *string, int y)
 
     for(int i = 0; i < len; i++)
     {
-        drawLetter(string[i], x, y);
+        drawLetter(string[i], x, y, 4);
         if(string[i] == 'i')
             x += ((FONT_WIDTH - 4) * 4); // more for i...maybe l?
         else
             x += ((FONT_WIDTH - 2) * 4); // Minus two for distancing...kerning(?)
     }
+}
+
+void drawFPS(int fps)
+{
+    char c;
+    int x;
+    // draw the FPS part
+    drawLetter('F', 1000, 0, 1);
+    drawLetter('P', 1008, 0, 1);
+    drawLetter('S', 1016, 0, 1);
+    drawLetter(':', 1024, 0, 1);
+    drawLetter(' ', 1032, 0, 1);
+
+    // convert int to chars
+    if(fps > 1000)
+        fps = 1000;
+    
+    for(int i = 0; i < 4; i++)
+    {
+        c = (fps % 10) + 48; // need 48 to convert to ASCII numbers
+        fps = fps / 10;
+        x = 1064 - (i * 8);
+        drawLetter(c, x, 0, 1);
+    }
+    // draw the digits
+    
 }
