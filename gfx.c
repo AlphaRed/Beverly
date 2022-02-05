@@ -62,7 +62,7 @@ void setupFontTiles(SDL_Rect f[], int num)
     }
 }
 
-void drawString(char *string, int y)
+void drawString(char *string, int y) // this can possibly be discarded...
 {
     // only draw a string max length of 40 characters! (1,280 res width / (8 * 4) don't forget the upscale of 4x
     // technically can be drawn closer due to the way I've drawn the pixel art!
@@ -104,7 +104,7 @@ void drawFPS(int fps)
     }   
 }
 
-void drawAnimatedLine(LineStruct *L, int currentTicks)
+void drawAnimatedLine(LineStruct *L, int currentTicks, CursorStruct *C)
 {
     int drawX = L->x;
     for(int i = 0; i < L->currentFrame; i++)
@@ -112,9 +112,9 @@ void drawAnimatedLine(LineStruct *L, int currentTicks)
         char c = L->string[i];
         drawLetter(c, drawX, L->y, L->s);
         if(c == 'i')
-            drawX += ((FONT_WIDTH - 4) * 4); // more for i...maybe l?
+            drawX += ((FONT_WIDTH - 4) * L->s); // more for i...maybe l?
         else
-            drawX += ((FONT_WIDTH - 2) * 4); // Minus two for distancing...kerning(?)
+            drawX += ((FONT_WIDTH - 2) * L->s); // Minus two for distancing...kerning(?)            
     }
     int deltaTicks = currentTicks - L->lastTick;
     if(deltaTicks > L->delay)
@@ -123,5 +123,26 @@ void drawAnimatedLine(LineStruct *L, int currentTicks)
         if(L->currentFrame > L->length)
             L->currentFrame = L->length; // prevent out of bounds
         L->lastTick = currentTicks;
+        C->x += ((FONT_WIDTH - 2) * L->s);
+        if(C->x > drawX)
+            C->x = drawX;
+    }
+}
+
+void drawCursor(CursorStruct *C, int currentTicks) // TO DO: add a function for changing location of cursor
+{
+    char c;
+    if(C->currentFrame == 1)
+        c = C->c2;
+    else
+        c = C->c1;
+    drawLetter(c, C->x, C->y, C->s);
+    int deltaTicks = currentTicks - C->lastTick;
+    if(deltaTicks > C->delay)
+    {
+        C->currentFrame++;
+        if(C->currentFrame > 1)
+            C->currentFrame = 0; // I think there's a better way to do this but whatever
+        C->lastTick = currentTicks;
     }
 }

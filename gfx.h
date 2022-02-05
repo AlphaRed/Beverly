@@ -11,6 +11,7 @@ void drawLetter(char c, int x, int y, int s);
 void setupFontTiles(SDL_Rect f[], int num);
 void drawString(char *string, int y);
 void drawFPS(int fps);
-void drawAnimatedLine(LineStruct *L, int currentTicks);
+void drawAnimatedLine(LineStruct *L, int currentTicks, CursorStruct *C);
+void drawCursor(CursorStruct *C, int currentTicks);
 
 #endif

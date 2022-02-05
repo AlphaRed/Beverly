@@ -12,12 +12,17 @@
 #define FONT_NUM 200
 #define MAX_FPS 60
 
-typedef struct // may not need this...?
+typedef struct
 {
     int x;
     int y;
-    SDL_Rect sprite;
-} SpriteStruct;
+    int s;
+    char c1;
+    char c2;
+    int currentFrame;
+    int delay;
+    int lastTick;
+} CursorStruct;
 
 typedef struct
 {

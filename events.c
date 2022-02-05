@@ -1,7 +1,7 @@
 #include"common.h"
 #include "events.h"
 
-int checkEvents(SDL_Event e, SpriteStruct *p)
+int checkEvents(SDL_Event e)
 {
     if(e.type == SDL_QUIT)
         return 0;

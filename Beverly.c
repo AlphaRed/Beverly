@@ -3,8 +3,6 @@
 #include "gfx.h"
 #include "system.h"
 
-SpriteStruct cursor;
-
 int main(int argc, char *args[])
 {
     // SDL and window setup
@@ -64,6 +62,16 @@ int main(int argc, char *args[])
     LineOne.delay = 450; // half a second or so
     LineOne.lastTick = 0;
     
+    CursorStruct cursor;
+    cursor.x = 0;
+    cursor.y = 0;
+    cursor.s = 4;
+    cursor.c1 = ' ';
+    cursor.c2 = 127;
+    cursor.currentFrame = 0;
+    cursor.delay = 450;
+    cursor.lastTick = 0;
+    
 
     // Game loop
     while(quit)
@@ -72,7 +80,7 @@ int main(int argc, char *args[])
 
         // Input
         SDL_PollEvent(&e);
-        quit = checkEvents(e, &cursor);
+        quit = checkEvents(e);
 
         // Logic
 
@@ -81,9 +89,9 @@ int main(int argc, char *args[])
         blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         blitImage(bust, 176, 110, 76, 117);
         //blitImage(sheep, 176, 210, 448, 105);
-        drawAnimatedLine(&LineOne, renderTicks);
+        drawAnimatedLine(&LineOne, renderTicks, &cursor);
+        drawCursor(&cursor, renderTicks);
         //drawString("Welcome...Otacon.", 0);
-        //drawString("We have sheep jeeps.", 12 * 4);
         drawFPS(fps_counter);
         
         SDL_RenderPresent(renderer);
