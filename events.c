@@ -1,7 +1,7 @@
 #include"common.h"
 #include "events.h"
 
-int checkEvents(SDL_Event e, ShipStruct *p)
+int checkEvents(SDL_Event e, SpriteStruct *p)
 {
     if(e.type == SDL_QUIT)
         return 0;
@@ -9,9 +9,9 @@ int checkEvents(SDL_Event e, ShipStruct *p)
     {
         switch(e.key.keysym.sym)
         {
-            case SDLK_a: p->x -= 10;
+            //case SDLK_a:;
                 break;
-            case SDLK_d: p->x += 10;
+            //case SDLK_d:;
                 break;
             default:
                 break;

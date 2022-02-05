@@ -85,14 +85,13 @@ void drawFPS(int fps)
 {
     char c;
     int x;
-    // draw the FPS part
+
     drawLetter('F', 1000, 0, 1);
     drawLetter('P', 1008, 0, 1);
     drawLetter('S', 1016, 0, 1);
     drawLetter(':', 1024, 0, 1);
     drawLetter(' ', 1032, 0, 1);
 
-    // convert int to chars
     if(fps > 1000)
         fps = 1000;
     
@@ -102,7 +101,27 @@ void drawFPS(int fps)
         fps = fps / 10;
         x = 1064 - (i * 8);
         drawLetter(c, x, 0, 1);
+    }   
+}
+
+void drawAnimatedLine(LineStruct *L, int currentTicks)
+{
+    int drawX = L->x;
+    for(int i = 0; i < L->currentFrame; i++)
+    {
+        char c = L->string[i];
+        drawLetter(c, drawX, L->y, L->s);
+        if(c == 'i')
+            drawX += ((FONT_WIDTH - 4) * 4); // more for i...maybe l?
+        else
+            drawX += ((FONT_WIDTH - 2) * 4); // Minus two for distancing...kerning(?)
     }
-    // draw the digits
-    
+    int deltaTicks = currentTicks - L->lastTick;
+    if(deltaTicks > L->delay)
+    {
+        L->currentFrame++;
+        if(L->currentFrame > L->length)
+            L->currentFrame = L->length; // prevent out of bounds
+        L->lastTick = currentTicks;
+    }
 }

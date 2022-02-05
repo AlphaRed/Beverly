@@ -12,13 +12,24 @@
 #define FONT_NUM 200
 #define MAX_FPS 60
 
-typedef struct
+typedef struct // may not need this...?
 {
     int x;
     int y;
     SDL_Rect sprite;
-    int draw;
-} ShipStruct;
+} SpriteStruct;
+
+typedef struct
+{
+    int x;
+    int y;
+    int s;
+    char *string;
+    int length;
+    int currentFrame;
+    int delay;
+    int lastTick;
+} LineStruct;
 
 SDL_Renderer *renderer; // some things were meant to be global
 SDL_Texture *font;
