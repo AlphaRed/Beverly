@@ -13,5 +13,6 @@ void drawString(char *string, int y);
 void drawFPS(int fps);
 void drawAnimatedLine(LineStruct *L, int currentTicks, CursorStruct *C);
 void drawCursor(CursorStruct *C, int currentTicks);
+void drawParagraph(TextStruct *T, int currentTicks, CursorStruct *C);
 
 #endif

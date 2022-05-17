@@ -23,7 +23,7 @@ int main(int argc, char *args[])
         printf("IMG library failed to initialize.\n");
         return 1;
     }
-    
+
     //SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, 0);
     //SDL_RenderSetLogicalSize(renderer, 320, 240);
     
@@ -56,11 +56,21 @@ int main(int argc, char *args[])
     LineOne.x = 0;
     LineOne.y = 0;
     LineOne.s = 4;
-    LineOne.string = "Welcome...Otacon.";
-    LineOne.length = 18; // should do a function to calculate this automatically
+    LineOne.string = "Please login.";
+    LineOne.length = 14; // should do a function to calculate this automatically
     LineOne.currentFrame = -1;
     LineOne.delay = 450; // half a second or so
     LineOne.lastTick = 0;
+
+    LineStruct LineTwo;
+    LineTwo.x = 0;
+    LineTwo.y = 12 * 4;
+    LineTwo.s = 4;
+    LineTwo.string = "Welcome...Otacon.";
+    LineTwo.length = 18; // should do a function to calculate this automatically
+    LineTwo.currentFrame = -1;
+    LineTwo.delay = 450; // half a second or so
+    LineTwo.lastTick = 0;
     
     CursorStruct cursor;
     cursor.x = 0;
@@ -71,7 +81,15 @@ int main(int argc, char *args[])
     cursor.currentFrame = 0;
     cursor.delay = 450;
     cursor.lastTick = 0;
+
+    TextStruct textTest;
+    textTest.currentLetter = 0;
+    textTest.lastTick = 0;
     
+    FILE *file = openTextFile("data/test.txt");
+    if(file == NULL)
+        printf("Error loading text file!!!\n");
+    loadTextFile(file, &textTest);
 
     // Game loop
     while(quit)
@@ -89,9 +107,15 @@ int main(int argc, char *args[])
         blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         blitImage(bust, 176, 110, 76, 117);
         //blitImage(sheep, 176, 210, 448, 105);
-        drawAnimatedLine(&LineOne, renderTicks, &cursor);
-        drawCursor(&cursor, renderTicks);
+        //drawAnimatedLine(&LineOne, renderTicks, &cursor);
+        //drawAnimatedLine(&LineTwo, renderTicks, &cursor);
+        //drawParagraph(&LineOne, renderTicks, &cursor);
+        //drawCursor(&cursor, renderTicks);
         //drawString("Welcome...Otacon.", 0);
+
+        // Do the cursor after
+        //drawParagraph(&textTest, renderTicks, &cursor); // still work in progress
+
         drawFPS(fps_counter);
         
         SDL_RenderPresent(renderer);
@@ -99,6 +123,7 @@ int main(int argc, char *args[])
         fps_counter = calculateFPS(current_ticks);
     }
 
+    closeTextFile(file);
     cleanup(window);
     return 0;
 }

@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define SCREEN_WIDTH 1280 // keep it 16:9
 #define SCREEN_HEIGHT 720
@@ -11,6 +12,7 @@
 #define TILE_SCALE 2
 #define FONT_NUM 200
 #define MAX_FPS 60
+#define MAX_CHARS 30
 
 typedef struct
 {
@@ -35,6 +37,21 @@ typedef struct
     int delay;
     int lastTick;
 } LineStruct;
+
+typedef struct
+{
+    //int x;
+    //int y;
+    ///int s;
+    char string1[MAX_CHARS];
+    char string2[MAX_CHARS];
+    int string1Len;
+    int string2Len;
+    //int length;
+    int currentLetter;
+    //int delay;
+    int lastTick;
+} TextStruct;
 
 SDL_Renderer *renderer; // some things were meant to be global
 SDL_Texture *font;

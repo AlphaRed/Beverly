@@ -146,3 +146,33 @@ void drawCursor(CursorStruct *C, int currentTicks) // TO DO: add a function for 
         C->lastTick = currentTicks;
     }
 }
+
+void drawParagraph(TextStruct *T, int currentTicks, CursorStruct *C)
+{
+    int drawX = 10;
+    int drawY = 10;
+    int scale = 4;
+    int delay = 450;
+
+    for(int i = 0; i <= T->currentLetter; i++)
+    {
+        char c = T->string1[i];
+        drawLetter(c, drawX, drawY, scale);
+        if(c == 'i')
+            drawX += ((FONT_WIDTH - 4) * scale); // more for i...maybe l?
+        else
+            drawX += ((FONT_WIDTH - 2) * scale); // Minus two for distancing...kerning(?)
+    }
+                 
+    int deltaTicks = currentTicks - T->lastTick;
+    if(deltaTicks > delay)
+    {
+        T->currentLetter++;
+        if(T->currentLetter > T->string1Len)
+            T->currentLetter = T->string1Len;
+        T->lastTick = currentTicks;
+        C->x += ((FONT_WIDTH - 2) * scale);
+        if(C->x > drawX)
+            C->x = drawX;
+    }
+}
