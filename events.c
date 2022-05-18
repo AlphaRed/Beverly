@@ -9,9 +9,17 @@ int checkEvents(SDL_Event e)
     {
         switch(e.key.keysym.sym)
         {
-            //case SDLK_a:;
+            case SDLK_w:
+                cameraOffsetY -= 20;
                 break;
-            //case SDLK_d:;
+            case SDLK_s:
+                cameraOffsetY += 20;
+                break;
+            case SDLK_a:
+                cameraOffsetX -= 20;
+                break;
+            case SDLK_d:
+                cameraOffsetX += 20;
                 break;
             default:
                 break;

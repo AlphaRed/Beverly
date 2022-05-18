@@ -1,7 +1,8 @@
-#include"common.h"
+#include "common.h"
 #include "events.h"
 #include "gfx.h"
 #include "system.h"
+#include "map.h"
 
 int main(int argc, char *args[])
 {
@@ -39,6 +40,10 @@ int main(int argc, char *args[])
     SDL_Texture *sheep = loadImage("art/sheepjeeps.png");
     if(sheep == NULL)
         printf("Sheep image failed to load.\n");
+
+    SDL_Texture *tile = loadImage("art/tile.png");
+    if(tile == NULL)
+        printf("Tile image failed to load.\n");
 
     font = loadImage("art/font-ascii.png");
     if(font == NULL)
@@ -91,6 +96,12 @@ int main(int argc, char *args[])
         printf("Error loading text file!!!\n");
     loadTextFile(file, &textTest);
 
+    //int map[2][2] = {1,1,1,1};
+    if(loadMap("data/map.txt") == 1)
+        printf("Error loading map!\n");
+    cameraOffsetX = 0;
+    cameraOffsetY = 0;
+
     // Game loop
     while(quit)
     {
@@ -106,6 +117,20 @@ int main(int argc, char *args[])
         renderTicks = SDL_GetTicks();
         blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         blitImage(bust, 176, 110, 76, 117);
+
+        for(int i = 0; i < MAX_MAP_SIZE; i++)
+        {
+            for(int j = 0; j < MAX_MAP_SIZE; j++)
+            {
+                if(levelMap[j][i] == 1)
+                {
+                    int x = (j - i) * 16 + cameraOffsetX;
+                    int y = (j + i) * 8 + cameraOffsetY;
+                    blitImage(tile, x, y, 32, 32);
+                }
+                    
+            }
+        }
         //blitImage(sheep, 176, 210, 448, 105);
         //drawAnimatedLine(&LineOne, renderTicks, &cursor);
         //drawAnimatedLine(&LineTwo, renderTicks, &cursor);

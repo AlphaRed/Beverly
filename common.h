@@ -13,6 +13,7 @@
 #define FONT_NUM 200
 #define MAX_FPS 60
 #define MAX_CHARS 30
+#define MAX_MAP_SIZE 10
 
 typedef struct
 {
@@ -56,5 +57,9 @@ typedef struct
 SDL_Renderer *renderer; // some things were meant to be global
 SDL_Texture *font;
 SDL_Rect fontTiles[FONT_NUM];
+
+int levelMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
+int cameraOffsetX;
+int cameraOffsetY;
 
 #endif
