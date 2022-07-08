@@ -14,6 +14,7 @@
 #define MAX_FPS 60
 #define MAX_CHARS 30
 #define MAX_MAP_SIZE 10
+#define TILE_NUM 64
 
 typedef struct
 {
@@ -54,9 +55,18 @@ typedef struct
     int lastTick;
 } TextStruct;
 
-SDL_Renderer *renderer; // some things were meant to be global
+typedef struct
+{
+    SDL_Texture *img;
+    int x;
+    int y;
+} MapCursor;
+
+
+// TO DO MOVE THESE OUT AND USE EXTERN WHERE APPLICABLE
 SDL_Texture *font;
 SDL_Rect fontTiles[FONT_NUM];
+SDL_Rect mapTiles[TILE_NUM];
 
 int levelMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
 int cameraOffsetX;

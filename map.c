@@ -1,6 +1,6 @@
 #include"common.h"
 
-// load from file function
+// Loads map from file
 int loadMap(char *filename)
 {
     FILE *file = fopen(filename, "r");
@@ -21,4 +21,20 @@ int loadMap(char *filename)
     return 0;
 }
 
-// tile loading?
+// Setup map tiles to tile array
+void setupMapTiles(SDL_Rect t[], int num)
+{
+    for(int i = 0; i < num; i++)
+    {
+        t[i].x = (i % 8) * TILE_SIZE;
+        t[i].y = (i / 8) * TILE_SIZE;
+        t[i].w = TILE_SIZE;
+        t[i].h = TILE_SIZE;
+    }
+}
+
+// height map loading
+
+// tile loading
+
+// draw map function

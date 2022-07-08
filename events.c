@@ -1,7 +1,7 @@
 #include"common.h"
 #include "events.h"
 
-int checkEvents(SDL_Event e)
+int checkEvents(SDL_Event e, MapCursor *c)
 {
     if(e.type == SDL_QUIT)
         return 0;
@@ -10,16 +10,24 @@ int checkEvents(SDL_Event e)
         switch(e.key.keysym.sym)
         {
             case SDLK_w:
-                cameraOffsetY -= 20;
+                c->y -= 1;
+                if(c->y < 0)
+                    c->y = 0;
                 break;
             case SDLK_s:
-                cameraOffsetY += 20;
+                c->y += 1;
+                if(c->y > MAX_MAP_SIZE - 1)
+                    c->y = MAX_MAP_SIZE - 1;
                 break;
             case SDLK_a:
-                cameraOffsetX -= 20;
+                c->x -= 1;
+                if(c->x < 0)
+                    c->x = 0;
                 break;
             case SDLK_d:
-                cameraOffsetX += 20;
+                c->x += 1;
+                if(c->x > MAX_MAP_SIZE - 1)
+                    c->x = MAX_MAP_SIZE - 1;
                 break;
             default:
                 break;

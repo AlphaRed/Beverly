@@ -4,30 +4,19 @@
 #include "system.h"
 #include "map.h"
 
+// some things were meant to be global
+SDL_Window *window;
+SDL_Renderer *renderer;
+
 int main(int argc, char *args[])
-{
-    // SDL and window setup
-    SDL_Window *window = initSDL();
-    if(window == NULL)
+{    
+    // SDL setup
+    if(initSDL())
     {
-        printf("Window failed to be created: %s\n", SDL_GetError());
-        return 1;
-    }
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if(renderer == NULL)
-    {
-        printf("Renderer failed to be created: %s\n", SDL_GetError());
-        return 1;
-    }
-    if(initIMG())
-    {
-        printf("IMG library failed to initialize.\n");
+        printf("initSDL failed.\n");
         return 1;
     }
 
-    //SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, 0);
-    //SDL_RenderSetLogicalSize(renderer, 320, 240);
-    
     // Load in images and tiles
     SDL_Texture *bg = loadImage("art/bg.png");
     if(bg == NULL)
@@ -50,6 +39,12 @@ int main(int argc, char *args[])
         printf("Font image filed to load.\n");
     
     setupFontTiles(fontTiles, FONT_NUM);
+
+    SDL_Texture *map = loadImage("art/maptiles.png");
+    if(map == NULL)
+        printf("Map tiles image failed to load.\n");
+
+    setupMapTiles(mapTiles, TILE_NUM);
 
     int quit = 1;
     SDL_Event e;
@@ -96,11 +91,19 @@ int main(int argc, char *args[])
         printf("Error loading text file!!!\n");
     loadTextFile(file, &textTest);
 
-    //int map[2][2] = {1,1,1,1};
     if(loadMap("data/map.txt") == 1)
         printf("Error loading map!\n");
-    cameraOffsetX = 0;
+    // center it initially
+    cameraOffsetX = (SCREEN_WIDTH / 2) - (TILE_SIZE * 4);
     cameraOffsetY = 0;
+
+    // Map cursor
+    MapCursor c;
+    c.img = loadImage("art/map-cursor1.png");
+    if(c.img == NULL)
+        printf("Map cursor image failed to load.\n");
+    c.x = 0; // start at the first tile
+    c.y = 0; // start at the first tile
 
     // Game loop
     while(quit)
@@ -109,14 +112,14 @@ int main(int argc, char *args[])
 
         // Input
         SDL_PollEvent(&e);
-        quit = checkEvents(e);
+        quit = checkEvents(e, &c);
 
         // Logic
 
         // Render
         renderTicks = SDL_GetTicks();
-        blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        blitImage(bust, 176, 110, 76, 117);
+        blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1);
+        //blitImage(bust, 176, 110, 76, 117, 1);        
 
         for(int i = 0; i < MAX_MAP_SIZE; i++)
         {
@@ -124,13 +127,24 @@ int main(int argc, char *args[])
             {
                 if(levelMap[j][i] == 1)
                 {
-                    int x = (j - i) * 16 + cameraOffsetX;
-                    int y = (j + i) * 8 + cameraOffsetY;
-                    blitImage(tile, x, y, 32, 32);
+                    int x = (j - i) * 64 + cameraOffsetX;
+                    int y = (j + i) * 32 + cameraOffsetY;
+                    //blitImage(tile, x, y, TILE_SIZE, TILE_SIZE, 4);
+                    drawTile(map, 1, x, y, 4);
                 }
-                    
+                if(levelMap[j][i] == 0)
+                {
+                    int x = (j - i) * 64 + cameraOffsetX;
+                    int y = (j + i) * 32 + cameraOffsetY;
+                    //blitImage(tile, x, y, TILE_SIZE, TILE_SIZE, 4);
+                    drawTile(map, 0, x, y, 4);
+                }       
             }
         }
+        // draw cursor after map
+        int cx = (c.x - c.y) * 64 + cameraOffsetX;
+        int cy = (c.x + c.y) * 32 + cameraOffsetY;
+        blitImage(c.img, cx, cy, TILE_SIZE, TILE_SIZE, 4);
         //blitImage(sheep, 176, 210, 448, 105);
         //drawAnimatedLine(&LineOne, renderTicks, &cursor);
         //drawAnimatedLine(&LineTwo, renderTicks, &cursor);
@@ -149,6 +163,6 @@ int main(int argc, char *args[])
     }
 
     closeTextFile(file);
-    cleanup(window);
+    cleanup();
     return 0;
 }

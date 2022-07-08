@@ -1,19 +1,28 @@
 #include"common.h"
 #include "system.h"
 
-SDL_Window *initSDL()
+int initWindow()
 {
-    SDL_Window *w = NULL;
+    window = NULL;
     if(SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         printf("SDL failed to initialize: %s\n", SDL_GetError());
-        w = NULL;
+        return 1;
     }
     else
+        window = SDL_CreateWindow("Beverley", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    return 0;
+}
+
+int initRenderer()
+{
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if(renderer == NULL)
     {
-        w = SDL_CreateWindow("Beverley", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+        printf("Renderer failed to be created: %s\n", SDL_GetError());
+        return 1;
     }
-    return w;
+    return 0;
 }
 
 int initIMG()
@@ -26,10 +35,32 @@ int initIMG()
     return 0;
 }
 
-void cleanup(SDL_Window *w)
+int initSDL()
+{
+    if(initWindow())
+    {
+        printf("initWindow failed.\n");
+        return 1;
+    }
+    
+    if(initRenderer())
+    {
+        printf("initRenderer failed.\n");
+        return 1;
+    }
+
+    if(initIMG())
+    {
+        printf("initIMG failed.\n");
+        return 1;
+    }
+    return 0;
+}
+
+void cleanup()
 {
     SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(w);
+    SDL_DestroyWindow(window);
     IMG_Quit();
     SDL_Quit();
 }

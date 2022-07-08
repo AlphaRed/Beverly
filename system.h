@@ -1,10 +1,11 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
-SDL_Window *initSDL();
-int initIMG();
-int initTTF();
-void cleanup(SDL_Window *w);
+extern SDL_Window *window;
+extern SDL_Renderer *renderer;
+
+int initSDL();
+void cleanup();
 SDL_Rect initTile(int x, int y, int w, int h);
 int calculateFPS(int currentTicks);
 

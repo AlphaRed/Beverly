@@ -3,24 +3,24 @@
 
 SDL_Texture *loadImage(char *filename)
 {
-    SDL_Texture *texture = NULL;
+    SDL_Texture *t = NULL;
     SDL_Surface *img = IMG_Load(filename);
     if(!img)
     {
         printf("Image failed to load: %s\n", IMG_GetError());
         return NULL;
     }
-    texture = SDL_CreateTextureFromSurface(renderer, img);
-    return texture;
+    t = SDL_CreateTextureFromSurface(renderer, img);
+    return t;
 }
 
-void blitImage(SDL_Texture *image, int x, int y, int w, int h)
+void blitImage(SDL_Texture *image, int x, int y, int w, int h, int s)
 {
     SDL_Rect destRect;
     destRect.x = x;
     destRect.y = y;
-    destRect.w = w;
-    destRect.h = h;
+    destRect.w = w * s;
+    destRect.h = h * s;
 
     SDL_RenderCopy(renderer, image, NULL, &destRect);
 }
@@ -36,6 +36,8 @@ void blitTile(SDL_Texture *image, int x, int y, int w, int h, SDL_Rect destRect)
     SDL_RenderCopy(renderer, image, &srcRect, &destRect);
 }
 
+
+// TO DO: move with other text related functions to new file
 void drawLetter(char c, int x, int y, int s)
 {
     //int x = ((c - 32) % 8) * 8; // ASCII starts at char = 32, font width = 8px
@@ -51,6 +53,7 @@ void drawLetter(char c, int x, int y, int s)
     blitTile(font, fontTiles[fontIndex].x, fontTiles[fontIndex].y, fontTiles[fontIndex].w, fontTiles[fontIndex].h, destRect);
 }
 
+// TO DO: move with other text related functions to new file
 void setupFontTiles(SDL_Rect f[], int num)
 {
     for(int i = 0; i < num; i++)
@@ -62,6 +65,7 @@ void setupFontTiles(SDL_Rect f[], int num)
     }
 }
 
+// TO DO: move with other text related functions to new file
 void drawString(char *string, int y) // this can possibly be discarded...
 {
     // only draw a string max length of 40 characters! (1,280 res width / (8 * 4) don't forget the upscale of 4x
@@ -81,6 +85,7 @@ void drawString(char *string, int y) // this can possibly be discarded...
     }
 }
 
+// TO DO: move with other text related functions to new file
 void drawFPS(int fps)
 {
     char c;
@@ -104,6 +109,7 @@ void drawFPS(int fps)
     }   
 }
 
+// TO DO: move with other text related functions to new file
 void drawAnimatedLine(LineStruct *L, int currentTicks, CursorStruct *C)
 {
     int drawX = L->x;
@@ -129,6 +135,7 @@ void drawAnimatedLine(LineStruct *L, int currentTicks, CursorStruct *C)
     }
 }
 
+// TO DO: move with other text related functions to new file
 void drawCursor(CursorStruct *C, int currentTicks) // TO DO: add a function for changing location of cursor
 {
     char c;
@@ -147,6 +154,7 @@ void drawCursor(CursorStruct *C, int currentTicks) // TO DO: add a function for 
     }
 }
 
+// TO DO: move with other text related functions to new file
 void drawParagraph(TextStruct *T, int currentTicks, CursorStruct *C)
 {
     int drawX = 10;
@@ -175,4 +183,15 @@ void drawParagraph(TextStruct *T, int currentTicks, CursorStruct *C)
         if(C->x > drawX)
             C->x = drawX;
     }
+}
+
+void drawTile(SDL_Texture *t, int index, int x, int y, int s)
+{
+    SDL_Rect destRect;
+    destRect.x = x;
+    destRect.y = y;
+    destRect.w = TILE_SIZE * s;
+    destRect.h = TILE_SIZE * s;
+    
+    blitTile(t, mapTiles[index].x, mapTiles[index].y, mapTiles[index].w, mapTiles[index].h, destRect);
 }
