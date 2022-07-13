@@ -195,3 +195,38 @@ void drawTile(SDL_Texture *t, int index, int x, int y, int s)
     
     blitTile(t, mapTiles[index].x, mapTiles[index].y, mapTiles[index].w, mapTiles[index].h, destRect);
 }
+
+void drawMap(SDL_Texture *map, int offsetX, int offsetY)
+{
+    for(int h = 0; h < MAX_MAP_HEIGHT; h++)
+    {
+        for(int i = 0; i < MAX_MAP_SIZE; i++)
+        {
+            for(int j = 0; j < MAX_MAP_SIZE; j++)
+            {   
+                if(heightMap[j][i] == h)
+                {
+                    if(levelMap[j][i] == 1) // need to make this more robust, but it works for now
+                    {
+                        int x = (j - i) * 64 + offsetX;
+                        int y = (j + i) * 32 + offsetY - (TILE_SIZE * 2 * h);
+                        drawTile(map, 1, x, y, 4);
+                    }
+                    if(levelMap[j][i] == 0)
+                    {
+                        int x = (j - i) * 64 + offsetX;
+                        int y = (j + i) * 32 + offsetY - (TILE_SIZE * 2 * h);
+                        drawTile(map, 0, x, y, 4);
+                    }
+                }          
+            }
+        }
+    }
+}
+
+void drawMapCursor(int x, int y, int offsetX, int offsetY, SDL_Texture *img)
+{
+    int cx = (x - y) * 64 + offsetX;
+    int cy = (x + y) * 32 + offsetY;
+    blitImage(img, cx, cy, TILE_SIZE, TILE_SIZE, 4);
+}

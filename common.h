@@ -14,6 +14,7 @@
 #define MAX_FPS 60
 #define MAX_CHARS 30
 #define MAX_MAP_SIZE 10
+#define MAX_MAP_HEIGHT 3
 #define TILE_NUM 64
 
 typedef struct
@@ -69,6 +70,7 @@ SDL_Rect fontTiles[FONT_NUM];
 SDL_Rect mapTiles[TILE_NUM];
 
 int levelMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
+int heightMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
 int cameraOffsetX;
 int cameraOffsetY;
 

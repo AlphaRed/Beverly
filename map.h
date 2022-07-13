@@ -3,5 +3,6 @@
 
 int loadMap(char *filename);
 void setupMapTiles(SDL_Rect t[], int num);
+int loadHeightMap(char *filename);
 
 #endif

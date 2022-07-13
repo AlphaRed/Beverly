@@ -1,4 +1,0 @@
-17
-This is line one.
-17
-This is line two.

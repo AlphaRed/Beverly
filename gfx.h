@@ -17,5 +17,7 @@ void drawAnimatedLine(LineStruct *L, int currentTicks, CursorStruct *C);
 void drawCursor(CursorStruct *C, int currentTicks);
 void drawParagraph(TextStruct *T, int currentTicks, CursorStruct *C);
 void drawTile(SDL_Texture *t, int index, int x, int y, int s);
+void drawMap(SDL_Texture *map, int offsetX, int offsetY);
+void drawMapCursor(int x, int y, int offsetX, int offsetY, SDL_Texture *img);
 
 #endif
