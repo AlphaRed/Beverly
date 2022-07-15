@@ -226,7 +226,38 @@ void drawMap(SDL_Texture *map, int offsetX, int offsetY)
 
 void drawMapCursor(int x, int y, int offsetX, int offsetY, SDL_Texture *img)
 {
+    int h = heightMap[x][y];
     int cx = (x - y) * 64 + offsetX;
-    int cy = (x + y) * 32 + offsetY;
+    int cy = (x + y) * 32 + offsetY - (TILE_SIZE * 2 * h);
     blitImage(img, cx, cy, TILE_SIZE, TILE_SIZE, 4);
+}
+
+void checkFocus(int cx, int cy, Camera_t *c)
+{
+    int h = 0;
+    int x = (cx - cy) * 64 + c->offsetX;
+    int y = (cx + cy) * 32 + c->offsetY - (TILE_SIZE * 2 * h);
+    int focusLeft = 300;
+    int focusRight = SCREEN_WIDTH - focusLeft;
+    int focusUp = 100;
+    int focusDown = SCREEN_HEIGHT - focusUp;
+
+    if(x < focusLeft) // check left
+    {
+        c->offsetX -= (x - focusLeft);
+    }    
+    else if(x > focusRight) // check right
+    {
+        c->offsetX -= (x - focusRight);
+    }
+    else if(y < focusUp) // check up
+    {
+        c->offsetY -= (y - focusUp);
+    }
+    else if(y > focusDown)
+    {
+        c->offsetY -= (y - focusDown);
+    }
+    else
+        return;        
 }

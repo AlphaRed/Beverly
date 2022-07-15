@@ -59,8 +59,10 @@ int main(int argc, char *args[])
         printf("Error loading height map!\n");
     
     // center it initially
-    cameraOffsetX = (SCREEN_WIDTH / 2) - (TILE_SIZE * 4);
-    cameraOffsetY = 0;
+    // Setup camera
+    Camera_t cam;
+    cam.offsetX = (SCREEN_WIDTH / 2) - (TILE_SIZE * 4);
+    cam.offsetY = 0;
 
     // Map cursor
     MapCursor c;
@@ -80,13 +82,14 @@ int main(int argc, char *args[])
         quit = checkEvents(e, &c);
 
         // Logic
+        checkFocus(c.x, c.y, &cam);
 
         // Render
         renderTicks = SDL_GetTicks();
         blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1); // clear bg to black      
 
-        drawMap(map, cameraOffsetX, cameraOffsetY);
-        drawMapCursor(c.x, c.y, cameraOffsetX, cameraOffsetY, c.img); // draw cursor after map
+        drawMap(map, cam.offsetX, cam.offsetY);
+        drawMapCursor(c.x, c.y, cam.offsetX, cam.offsetY, c.img); // draw cursor after map
         //blitImage(bust, 176, 110, 76, 117, 1);
 
         drawFPS(fps_counter);

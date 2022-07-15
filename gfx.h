@@ -19,5 +19,6 @@ void drawParagraph(TextStruct *T, int currentTicks, CursorStruct *C);
 void drawTile(SDL_Texture *t, int index, int x, int y, int s);
 void drawMap(SDL_Texture *map, int offsetX, int offsetY);
 void drawMapCursor(int x, int y, int offsetX, int offsetY, SDL_Texture *img);
+void checkFocus(int cx, int cy, Camera_t *c);
 
 #endif

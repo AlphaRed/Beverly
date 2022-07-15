@@ -56,13 +56,19 @@ typedef struct
     int lastTick;
 } TextStruct;
 
-typedef struct
+typedef struct // could maybe make this a generic sprite/obj struct?
 {
     SDL_Texture *img;
     int x;
     int y;
 } MapCursor;
 
+typedef struct
+{
+    int offsetX;
+    int offsetY;
+    int focus;
+} Camera_t;
 
 // TO DO MOVE THESE OUT AND USE EXTERN WHERE APPLICABLE
 SDL_Texture *font;
@@ -71,7 +77,5 @@ SDL_Rect mapTiles[TILE_NUM];
 
 int levelMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
 int heightMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
-int cameraOffsetX;
-int cameraOffsetY;
 
 #endif
