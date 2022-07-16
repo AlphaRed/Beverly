@@ -63,12 +63,21 @@ typedef struct // could maybe make this a generic sprite/obj struct?
     int y;
 } MapCursor;
 
-typedef struct
+typedef struct Camera_t
 {
     int offsetX;
     int offsetY;
     int focus;
 } Camera_t;
+
+typedef struct Mech_t
+{
+    SDL_Texture *img;
+    int x;
+    int y;
+    // will add more properties later on
+    struct Mech_t *next;
+} Mech_t;
 
 // TO DO MOVE THESE OUT AND USE EXTERN WHERE APPLICABLE
 SDL_Texture *font;

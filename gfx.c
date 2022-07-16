@@ -1,4 +1,4 @@
-#include"common.h"
+#include "common.h"
 #include "gfx.h"
 
 SDL_Texture *loadImage(char *filename)

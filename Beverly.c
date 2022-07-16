@@ -3,6 +3,7 @@
 #include "gfx.h"
 #include "system.h"
 #include "map.h"
+#include "mech.h"
 
 // some things were meant to be global
 SDL_Window *window;
@@ -72,6 +73,13 @@ int main(int argc, char *args[])
     c.x = 0; // start at the first tile
     c.y = 0; // start at the first tile
 
+    // for mech test
+    SDL_Texture *mechImg = loadImage("art/mech.png");
+    Mech_t *mechHead = NULL;
+    mechHead = addMech(mechHead, mechImg, 0, 0);
+    mechHead = addMech(mechHead, mechImg, 2, 1);
+    mechHead = addMech(mechHead, mechImg, 5, 4);
+
     // Game loop
     while(quit)
     {
@@ -90,6 +98,7 @@ int main(int argc, char *args[])
 
         drawMap(map, cam.offsetX, cam.offsetY);
         drawMapCursor(c.x, c.y, cam.offsetX, cam.offsetY, c.img); // draw cursor after map
+        drawMech(mechHead, cam.offsetX, cam.offsetY);
         //blitImage(bust, 176, 110, 76, 117, 1);
 
         drawFPS(fps_counter);
