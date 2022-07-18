@@ -1,5 +1,6 @@
 #include"common.h"
 #include "system.h"
+#include "gfx.h"
 
 int initWindow()
 {
@@ -131,4 +132,19 @@ int loadTextFile(FILE *f, TextStruct *t)
 void closeTextFile(FILE *f)
 {
     fclose(f);
+}
+
+void loadResources()
+{
+    bg = loadImage("art/bg.png");
+    if(bg == NULL)
+        printf("BG image failed to load.\n");
+    
+    tiles = loadImage("art/maptiles.png");
+    if(tiles == NULL)
+        printf("Map tiles image failed to load.\n");
+    
+    font = loadImage("art/font-ascii.png");
+    if(font == NULL)
+        printf("Font image filed to load.\n");
 }

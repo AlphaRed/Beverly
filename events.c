@@ -1,7 +1,7 @@
 #include"common.h"
 #include "events.h"
 
-int checkEvents(SDL_Event e, MapCursor *c)
+int checkGameEvents(SDL_Event e, MapCursor *c)
 {
     if(e.type == SDL_QUIT)
         return 0;
@@ -28,6 +28,24 @@ int checkEvents(SDL_Event e, MapCursor *c)
                 c->x += 1;
                 if(c->x > MAX_MAP_SIZE - 1)
                     c->x = MAX_MAP_SIZE - 1;
+                break;
+            default:
+                break;
+        }
+        return 1;    
+    }
+}
+
+int checkMenuEvents(SDL_Event e, MapCursor *c)
+{
+    if(e.type == SDL_QUIT)
+        return 0;
+    else if(e.type == SDL_KEYDOWN)
+    {
+        switch(e.key.keysym.sym)
+        {
+            case SDLK_RETURN:
+                return 2; // 
                 break;
             default:
                 break;

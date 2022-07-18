@@ -5,6 +5,7 @@
 #define MAX_LEN 40
 
 extern SDL_Renderer *renderer;
+extern SDL_Texture *font;
 
 SDL_Texture *loadImage(char *filename);
 void blitImage(SDL_Texture *image, int x, int y, int w, int h, int s);
@@ -20,5 +21,6 @@ void drawTile(SDL_Texture *t, int index, int x, int y, int s);
 void drawMap(SDL_Texture *map, int offsetX, int offsetY);
 void drawMapCursor(int x, int y, int offsetX, int offsetY, SDL_Texture *img);
 void checkFocus(int cx, int cy, Camera_t *c);
+void drawMenu();
 
 #endif

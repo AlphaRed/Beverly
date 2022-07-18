@@ -8,6 +8,11 @@
 // some things were meant to be global
 SDL_Window *window;
 SDL_Renderer *renderer;
+Gamestate gs = MENU;
+// resources
+SDL_Texture *bg;
+SDL_Texture *tiles;
+SDL_Texture *font;
 
 int main(int argc, char *args[])
 {    
@@ -19,33 +24,8 @@ int main(int argc, char *args[])
     }
 
     // Load in images and tiles
-    // TO DO: Handle this better?
-    SDL_Texture *bg = loadImage("art/bg.png");
-    if(bg == NULL)
-        printf("BG image failed to load.\n");
-
-    SDL_Texture *bust = loadImage("art/bust.png");
-    if(bust == NULL)
-        printf("Bust image failed to load.\n");
-
-    SDL_Texture *sheep = loadImage("art/sheepjeeps.png");
-    if(sheep == NULL)
-        printf("Sheep image failed to load.\n");
-
-    SDL_Texture *tile = loadImage("art/tile.png");
-    if(tile == NULL)
-        printf("Tile image failed to load.\n");
-
-    font = loadImage("art/font-ascii.png");
-    if(font == NULL)
-        printf("Font image filed to load.\n");
-    
-    setupFontTiles(fontTiles, FONT_NUM);
-
-    SDL_Texture *map = loadImage("art/maptiles.png");
-    if(map == NULL)
-        printf("Map tiles image failed to load.\n");
-
+    loadResources();
+    setupFontTiles(fontTiles, FONT_NUM); // move this?
     setupMapTiles(mapTiles, TILE_NUM);
 
     int quit = 1;
@@ -87,24 +67,39 @@ int main(int argc, char *args[])
 
         // Input
         SDL_PollEvent(&e);
-        quit = checkEvents(e, &c);
+        if(gs == GAME)
+        {
+            quit = checkGameEvents(e, &c);
+        }
+        else if(gs == MENU)
+        {
+            quit = checkMenuEvents(e, &c);
+            if(quit == 2)\
+                gs = GAME;
+        }
 
         // Logic
-        checkFocus(c.x, c.y, &cam);
+        if(gs == GAME)
+            checkFocus(c.x, c.y, &cam);
 
         // Render
         renderTicks = SDL_GetTicks();
-        blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1); // clear bg to black      
 
-        drawMap(map, cam.offsetX, cam.offsetY);
-        drawMapCursor(c.x, c.y, cam.offsetX, cam.offsetY, c.img); // draw cursor after map
-        drawMech(mechHead, cam.offsetX, cam.offsetY);
-        //blitImage(bust, 176, 110, 76, 117, 1);
-
-        drawFPS(fps_counter);
+        if(gs == GAME)
+        {
+            blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1); // clear bg to black      
+            drawMap(tiles, cam.offsetX, cam.offsetY);
+            drawMapCursor(c.x, c.y, cam.offsetX, cam.offsetY, c.img); // draw cursor after map
+            drawMech(mechHead, cam.offsetX, cam.offsetY);
+        }
+        else if(gs == MENU)
+        {
+            blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1); // clear bg to black
+            drawMenu();
+        }
         
+        drawFPS(fps_counter);
         SDL_RenderPresent(renderer);
-
         fps_counter = calculateFPS(current_ticks);
     }
 

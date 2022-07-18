@@ -17,6 +17,8 @@
 #define MAX_MAP_HEIGHT 3
 #define TILE_NUM 64
 
+typedef enum {MENU, GAME} Gamestate;
+
 typedef struct
 {
     int x;
@@ -80,7 +82,6 @@ typedef struct Mech_t
 } Mech_t;
 
 // TO DO MOVE THESE OUT AND USE EXTERN WHERE APPLICABLE
-SDL_Texture *font;
 SDL_Rect fontTiles[FONT_NUM];
 SDL_Rect mapTiles[TILE_NUM];
 

@@ -261,3 +261,9 @@ void checkFocus(int cx, int cy, Camera_t *c)
     else
         return;        
 }
+
+void drawMenu()
+{
+    drawString("Welcome to the frontlines, soldier!", 100);
+    drawString("Start?", 150);
+}
