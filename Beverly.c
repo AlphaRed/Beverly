@@ -14,6 +14,12 @@ SDL_Texture *bg;
 SDL_Texture *tiles;
 SDL_Texture *font;
 
+SDL_Rect fontTiles[FONT_NUM];
+SDL_Rect mapTiles[TILE_NUM];
+
+int levelMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
+int heightMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
+
 int main(int argc, char *args[])
 {    
     // SDL setup

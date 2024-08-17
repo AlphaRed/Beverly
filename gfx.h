@@ -6,6 +6,10 @@
 
 extern SDL_Renderer *renderer;
 extern SDL_Texture *font;
+extern SDL_Rect fontTiles[FONT_NUM];
+extern SDL_Rect mapTiles[TILE_NUM];
+extern int levelMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
+extern int heightMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
 
 SDL_Texture *loadImage(char *filename);
 void blitImage(SDL_Texture *image, int x, int y, int w, int h, int s);

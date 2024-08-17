@@ -1,4 +1,5 @@
-#include"common.h"
+#include "common.h"
+#include "map.h"
 
 // Loads map from file
 int loadMap(char *filename)
