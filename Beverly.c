@@ -5,7 +5,6 @@
 #include "map.h"
 
 // resources
-SDL_Texture *bg;
 SDL_Texture *tiles;
 SDL_Texture *font;
 
@@ -16,7 +15,7 @@ int levelMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
 int heightMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
 
 Client_t client;
-Sprite_t background;
+Sprite_t bg;
 Sprite_t bust;
 
 int main(int argc, char *args[]) {    
@@ -30,16 +29,25 @@ int main(int argc, char *args[]) {
     loadResources();
     setupFontTiles(fontTiles, FONT_NUM); // move this?
     setupMapTiles(mapTiles, TILE_NUM);
-    background.img = loadImage("art/bg.png");
     
-    bust.img = loadImage("art/bust.png");
+    // will need to move these...eventually!
     bust.x = 50;
     bust.y = 100;
-    bust.scale = 1;
     bust.w = 76;
     bust.h = 117;
+    bust.scale = 1;
     bust.frame = 0;
     bust.cols = 1;
+    bust.img = loadImage("art/bust.png");
+
+    bg.x = 0;
+    bg.y = 0;
+    bg.w = 32;
+    bg.h = 32;
+    bg.scale = 0;
+    bg.frame = 0;
+    bg.cols = 1;
+    bg.img = loadImage("art/bg.png");
     
     int quit = 1;
     SDL_Event e;
@@ -84,13 +92,13 @@ int main(int argc, char *args[]) {
         renderTicks = SDL_GetTicks();
 
         if(client.gamestate == GAME)
-        {
-            blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1); // clear bg to black      
+        {  
+            blitSprite(bg);   
             drawMap(tiles, cam.offsetX, cam.offsetY);
         }
         else if(client.gamestate == MENU)
         {
-            blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1); // clear bg to black
+            blitSprite(bg);
             blitSprite(bust);
             //drawMenu();
         }

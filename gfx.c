@@ -31,17 +31,6 @@ void blitSprite(Sprite_t s) {
 }
 
 // might not be needed anymore
-void blitImage(SDL_Texture *image, int x, int y, int w, int h, int s) {
-    SDL_Rect destRect;
-    destRect.x = x;
-    destRect.y = y;
-    destRect.w = w * s;
-    destRect.h = h * s;
-
-    SDL_RenderCopy(client.renderer, image, NULL, &destRect);
-}
-
-// might not be needed anymore
 void blitTile(SDL_Texture *image, int x, int y, int w, int h, SDL_Rect destRect) {
     SDL_Rect srcRect;
     srcRect.x = x;

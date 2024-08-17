@@ -13,7 +13,6 @@ extern int heightMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
 
 SDL_Texture *loadImage(char *filename);
 void blitSprite(Sprite_t s);
-void blitImage(SDL_Texture *image, int x, int y, int w, int h, int s);
 void blitTile(SDL_Texture *image, int x, int y, int w, int h, SDL_Rect destRect);
 void drawLetter(char c, int x, int y, int s);
 void setupFontTiles(SDL_Rect f[], int num);

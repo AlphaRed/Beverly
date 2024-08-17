@@ -114,10 +114,6 @@ void closeTextFile(FILE *f) {
 }
 
 void loadResources() {
-    bg = loadImage("art/bg.png");
-    if(bg == NULL)
-        printf("BG image failed to load.\n");
-    
     tiles = loadImage("art/maptiles.png");
     if(tiles == NULL)
         printf("Map tiles image failed to load.\n");

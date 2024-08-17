@@ -1,7 +1,6 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
-extern SDL_Texture *bg;
 extern SDL_Texture *tiles;
 extern SDL_Texture *font;
 
