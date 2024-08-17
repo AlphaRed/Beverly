@@ -1,39 +1,55 @@
 #include "common.h"
 #include "gfx.h"
 
-SDL_Texture *loadImage(char *filename)
-{
-    SDL_Texture *t = NULL;
+SDL_Texture *loadImage(char *filename) {
+    SDL_Texture *tex = NULL;
     SDL_Surface *img = IMG_Load(filename);
-    if(!img)
-    {
+    if(!img) {
         printf("Image failed to load: %s\n", IMG_GetError());
         return NULL;
     }
-    t = SDL_CreateTextureFromSurface(renderer, img);
-    return t;
+    tex = SDL_CreateTextureFromSurface(client.renderer, img);
+    return tex;
 }
 
-void blitImage(SDL_Texture *image, int x, int y, int w, int h, int s)
-{
+void blitSprite(Sprite_t s) {
+    SDL_Rect srcRect, destRect;
+    srcRect.x = (s.frame % s.cols) * s.w;
+    srcRect.y = (s.frame / s.cols) * s.h;
+    srcRect.w = s.w;
+    srcRect.h = s.h;
+
+    if(s.scale == 0) // full screen blit
+        SDL_RenderCopy(client.renderer, s.img, &srcRect, NULL);
+    else {
+        destRect.x = s.x;
+        destRect.y = s.y;
+        destRect.w = s.w * s.scale;
+        destRect.h = s.h * s.scale;
+        SDL_RenderCopy(client.renderer, s.img, &srcRect, &destRect);
+    }
+}
+
+// might not be needed anymore
+void blitImage(SDL_Texture *image, int x, int y, int w, int h, int s) {
     SDL_Rect destRect;
     destRect.x = x;
     destRect.y = y;
     destRect.w = w * s;
     destRect.h = h * s;
 
-    SDL_RenderCopy(renderer, image, NULL, &destRect);
+    SDL_RenderCopy(client.renderer, image, NULL, &destRect);
 }
 
-void blitTile(SDL_Texture *image, int x, int y, int w, int h, SDL_Rect destRect)
-{
+// might not be needed anymore
+void blitTile(SDL_Texture *image, int x, int y, int w, int h, SDL_Rect destRect) {
     SDL_Rect srcRect;
     srcRect.x = x;
     srcRect.y = y;
     srcRect.w = w;
     srcRect.h = h;
 
-    SDL_RenderCopy(renderer, image, &srcRect, &destRect);
+    SDL_RenderCopy(client.renderer, image, &srcRect, &destRect);
 }
 
 
@@ -224,14 +240,6 @@ void drawMap(SDL_Texture *map, int offsetX, int offsetY)
     }
 }
 
-void drawMapCursor(int x, int y, int offsetX, int offsetY, SDL_Texture *img)
-{
-    int h = heightMap[x][y];
-    int cx = (x - y) * 64 + offsetX;
-    int cy = (x + y) * 32 + offsetY - (TILE_SIZE * 2 * h);
-    blitImage(img, cx, cy, TILE_SIZE, TILE_SIZE, 4);
-}
-
 void checkFocus(int cx, int cy, Camera_t *c)
 {
     int h = 0;
@@ -262,8 +270,6 @@ void checkFocus(int cx, int cy, Camera_t *c)
         return;        
 }
 
-void drawMenu()
-{
-    drawString("Welcome to the frontlines, soldier!", 100);
-    drawString("Start?", 150);
+void drawMenu() {
+    drawString("Please enter your terminal number", 100);
 }

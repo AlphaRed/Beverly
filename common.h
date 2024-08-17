@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define SCREEN_WIDTH 1280 // keep it 16:9
-#define SCREEN_HEIGHT 720
+#define SCREEN_WIDTH    1280 // keep it 16:9
+#define SCREEN_HEIGHT   720
 #define TILE_SIZE 32
 #define TILE_SCALE 2
 #define FONT_NUM 200
@@ -18,6 +18,28 @@
 #define TILE_NUM 64
 
 typedef enum {MENU, GAME} Gamestate;
+
+typedef struct Client_t { // For all things client!
+    SDL_Window *window;
+    SDL_Renderer *renderer;
+    Gamestate gamestate;
+} Client_t;
+
+typedef struct Vec2_t {
+    int x;
+    int y;
+} Vec2_t;
+
+typedef struct Sprite_t { // add to it as you go...
+    int x; // for now, change to vec2 later on?
+    int y;
+    int w;
+    int h;
+    int scale;
+    int frame;
+    int cols;
+    SDL_Texture *img;
+} Sprite_t;
 
 typedef struct
 {
@@ -58,27 +80,11 @@ typedef struct
     int lastTick;
 } TextStruct;
 
-typedef struct // could maybe make this a generic sprite/obj struct?
-{
-    SDL_Texture *img;
-    int x;
-    int y;
-} MapCursor;
-
 typedef struct Camera_t
 {
     int offsetX;
     int offsetY;
     int focus;
 } Camera_t;
-
-typedef struct Mech_t
-{
-    SDL_Texture *img;
-    int x;
-    int y;
-    // will add more properties later on
-    struct Mech_t *next;
-} Mech_t;
 
 #endif

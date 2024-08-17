@@ -3,12 +3,7 @@
 #include "gfx.h"
 #include "system.h"
 #include "map.h"
-#include "mech.h"
 
-// some things were meant to be global
-SDL_Window *window;
-SDL_Renderer *renderer;
-Gamestate gs = MENU;
 // resources
 SDL_Texture *bg;
 SDL_Texture *tiles;
@@ -20,11 +15,13 @@ SDL_Rect mapTiles[TILE_NUM];
 int levelMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
 int heightMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
 
-int main(int argc, char *args[])
-{    
+Client_t client;
+Sprite_t background;
+Sprite_t bust;
+
+int main(int argc, char *args[]) {    
     // SDL setup
-    if(initSDL())
-    {
+    if(initSDL()) {
         printf("initSDL failed.\n");
         return 1;
     }
@@ -33,12 +30,23 @@ int main(int argc, char *args[])
     loadResources();
     setupFontTiles(fontTiles, FONT_NUM); // move this?
     setupMapTiles(mapTiles, TILE_NUM);
-
+    background.img = loadImage("art/bg.png");
+    
+    bust.img = loadImage("art/bust.png");
+    bust.x = 50;
+    bust.y = 100;
+    bust.scale = 1;
+    bust.w = 76;
+    bust.h = 117;
+    bust.frame = 0;
+    bust.cols = 1;
+    
     int quit = 1;
     SDL_Event e;
     int current_ticks;
     int fps_counter = 0;
     int renderTicks = 0;
+    client.gamestate = MENU;
 
     if(loadMap("data/map.txt") == 1)
         printf("Error loading map!\n");
@@ -51,21 +59,6 @@ int main(int argc, char *args[])
     cam.offsetX = (SCREEN_WIDTH / 2) - (TILE_SIZE * 4);
     cam.offsetY = 0;
 
-    // Map cursor
-    MapCursor c;
-    c.img = loadImage("art/map-cursor1.png");
-    if(c.img == NULL)
-        printf("Map cursor image failed to load.\n");
-    c.x = 0; // start at the first tile
-    c.y = 0; // start at the first tile
-
-    // for mech test
-    SDL_Texture *mechImg = loadImage("art/mech.png");
-    Mech_t *mechHead = NULL;
-    mechHead = addMech(mechHead, mechImg, 0, 0);
-    mechHead = addMech(mechHead, mechImg, 2, 1);
-    mechHead = addMech(mechHead, mechImg, 5, 4);
-
     // Game loop
     while(quit)
     {
@@ -73,39 +66,37 @@ int main(int argc, char *args[])
 
         // Input
         SDL_PollEvent(&e);
-        if(gs == GAME)
+        if(client.gamestate == GAME)
         {
-            quit = checkGameEvents(e, &c);
+            quit = checkGameEvents(e);
         }
-        else if(gs == MENU)
+        else if(client.gamestate == MENU)
         {
-            quit = checkMenuEvents(e, &c);
-            if(quit == 2)\
-                gs = GAME;
+            quit = checkMenuEvents(e);
+            if(quit == 2)
+                client.gamestate = GAME;
         }
 
         // Logic
-        if(gs == GAME)
-            checkFocus(c.x, c.y, &cam);
+        if(client.gamestate == GAME)
 
         // Render
         renderTicks = SDL_GetTicks();
 
-        if(gs == GAME)
+        if(client.gamestate == GAME)
         {
             blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1); // clear bg to black      
             drawMap(tiles, cam.offsetX, cam.offsetY);
-            drawMapCursor(c.x, c.y, cam.offsetX, cam.offsetY, c.img); // draw cursor after map
-            drawMech(mechHead, cam.offsetX, cam.offsetY);
         }
-        else if(gs == MENU)
+        else if(client.gamestate == MENU)
         {
             blitImage(bg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1); // clear bg to black
-            drawMenu();
+            blitSprite(bust);
+            //drawMenu();
         }
         
         drawFPS(fps_counter);
-        SDL_RenderPresent(renderer);
+        SDL_RenderPresent(client.renderer);
         fps_counter = calculateFPS(current_ticks);
     }
 

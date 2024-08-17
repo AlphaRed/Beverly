@@ -2,72 +2,57 @@
 #include "system.h"
 #include "gfx.h"
 
-int initWindow()
-{
-    window = NULL;
-    if(SDL_Init(SDL_INIT_VIDEO) < 0)
-    {
+int initWindow() {
+    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL failed to initialize: %s\n", SDL_GetError());
         return 1;
     }
     else
-        window = SDL_CreateWindow("Beverley", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+        client.window = SDL_CreateWindow("Beverly", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     return 0;
 }
 
-int initRenderer()
-{
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if(renderer == NULL)
-    {
+int initRenderer() {
+    client.renderer = SDL_CreateRenderer(client.window, -1, SDL_RENDERER_ACCELERATED);
+    if(client.renderer == NULL) {
         printf("Renderer failed to be created: %s\n", SDL_GetError());
         return 1;
     }
     return 0;
 }
 
-int initIMG()
-{
-    if(IMG_Init(IMG_INIT_PNG) < 0)
-    {
+int initIMG() {
+    if(IMG_Init(IMG_INIT_PNG) < 0) {
         printf("SDL_Image library failed to initialize: %s", IMG_GetError());
         return 1;
     }
     return 0;
 }
 
-int initSDL()
-{
-    if(initWindow())
-    {
+int initSDL() {
+    if(initWindow()) {
         printf("initWindow failed.\n");
         return 1;
     }
-    
-    if(initRenderer())
-    {
+    if(initRenderer()) {
         printf("initRenderer failed.\n");
         return 1;
     }
-
-    if(initIMG())
-    {
+    if(initIMG()) {
         printf("initIMG failed.\n");
         return 1;
     }
     return 0;
 }
 
-void cleanup()
-{
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
+void cleanup() {
+    SDL_DestroyRenderer(client.renderer);
+    SDL_DestroyWindow(client.window);
     IMG_Quit();
     SDL_Quit();
 }
 
-SDL_Rect initTile(int x, int y, int w, int h)
-{
+SDL_Rect initTile(int x, int y, int w, int h) {
     SDL_Rect tileRect;
     tileRect.x = x;
     tileRect.y = y;
@@ -77,16 +62,14 @@ SDL_Rect initTile(int x, int y, int w, int h)
     return tileRect;
 }
 
-int calculateFPS(int currentTicks)
-{
+int calculateFPS(int currentTicks) {
     int fps = 0;
     int deltaTicks = SDL_GetTicks() - currentTicks;
         
     if(deltaTicks > 0)
         fps = 1000 / deltaTicks;
         
-    if(fps > MAX_FPS)
-    {
+    if(fps > MAX_FPS) {
         int delay_time = (1000 / MAX_FPS) - deltaTicks;
         SDL_Delay(delay_time);
         // check again to see that it is fixed
@@ -98,12 +81,10 @@ int calculateFPS(int currentTicks)
 
 // In this file for now, will move it elsewhere eventually
 
-FILE *openTextFile(char *filename)
-{
+FILE *openTextFile(char *filename) {
     FILE *f = fopen(filename, "r");
 
-    if(f == NULL)
-    {
+    if(f == NULL) {
         printf("Failed to load text file, %s\n", filename);
         return NULL;
     }
@@ -111,8 +92,7 @@ FILE *openTextFile(char *filename)
         return f;
 }
 
-int loadTextFile(FILE *f, TextStruct *t)
-{
+int loadTextFile(FILE *f, TextStruct *t) {
     char tempLoad[MAX_CHARS] = {0};
     char num[5] = {0};
     
@@ -129,13 +109,11 @@ int loadTextFile(FILE *f, TextStruct *t)
     return 0;
 }
 
-void closeTextFile(FILE *f)
-{
+void closeTextFile(FILE *f) {
     fclose(f);
 }
 
-void loadResources()
-{
+void loadResources() {
     bg = loadImage("art/bg.png");
     if(bg == NULL)
         printf("BG image failed to load.\n");
