@@ -18,6 +18,7 @@ Client_t client;
 Sprite_t bg;
 Sprite_t bust;
 Sprite_t text;
+Sprite_t cursor;
 
 int main(int argc, char *args[]) {    
     // SDL setup
@@ -59,6 +60,16 @@ int main(int argc, char *args[]) {
     text.cols = 16;
     text.img = loadImage("art/font-ascii.png");
 
+    cursor.x = 0;
+    cursor.y = 0;
+    cursor.w = 8;
+    cursor.h = 12;
+    cursor.scale = 2; // go with 2x for now...
+    cursor.frame = 0;
+    cursor.cols = 2;
+    cursor.lastTick = 0;
+    cursor.img = loadImage("art/cursor.png");
+
     String_t testStr;
     testStr.data = "I'm back Otacon.";
     testStr.len = 16;
@@ -68,10 +79,11 @@ int main(int argc, char *args[]) {
     
     int quit = 1;
     SDL_Event e;
-    //int current_ticks;
     int fps_counter = 0;
     int renderTicks = 0;
     client.gamestate = MENU;
+    client.drawX = 0;
+    client.drawY = 0;
 
     if(loadMap("data/map.txt") == 1)
         printf("Error loading map!\n");
@@ -121,7 +133,7 @@ int main(int argc, char *args[]) {
             //blitSprite(&text);
             //drawChar(&text, 'H', 0, 0);
             drawLine(&testStr, &text);
-            //drawMenu();
+            drawCursor(&cursor);
         }
         
         drawFPS(fps_counter);

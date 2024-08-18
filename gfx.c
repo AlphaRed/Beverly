@@ -45,28 +45,39 @@ void drawChar(Sprite_t *s, char c, int x, int y) { // rename later? really small
 }
 
 void drawLine(String_t *str, Sprite_t *s) {
-    int drawX = 5; // start in a little
-    for(int i = 0; i < str->index; i++)
-    {
+    int drawX = 0; // start in a little
+    for(int i = 0; i < str->index; i++) {
         char c = str->data[i];
-        drawChar(s, c, drawX, str->y); // not sure we need a separate function?
+        drawChar(s, c, client.drawX, client.drawY); // not sure we need a separate function?
         if(c == 'i')
             drawX += ((FONT_WIDTH - 4) * s->scale); // more for i...maybe l?
         else
             drawX += ((FONT_WIDTH - 2) * s->scale); // Minus two for distancing...kerning(?)            
     }
     int deltaTicks = client.currentTicks - str->lastTick;
-    if(deltaTicks > 200) // delay hardcoded for now
-    {
+    if(deltaTicks > 300) { // delay hardcoded for now
         str->index++;
         if(str->index > str->len)
             str->index = str->len; // prevent out of bounds
         str->lastTick = client.currentTicks;
-        /*
-        C->x += ((FONT_WIDTH - 2) * L->s);
-        if(C->x > drawX)
-            C->x = drawX;
-        */
+        
+        client.drawX += ((FONT_WIDTH - 2) * s->scale);
+        if(client.drawX > drawX) // else it keeps drawing the last element along the window
+            client.drawX = drawX;
+    }
+}
+
+void drawCursor(Sprite_t *s) {
+    s->x = client.drawX;
+    s->y = client.drawY;
+    blitSprite(s);
+    int deltaTicks = client.currentTicks - s->lastTick;
+    if(deltaTicks > 400) { // delay is hardcoded...s/b slower than draw
+        if(s->frame >= 1)
+            s->frame = 0;
+        else
+            s->frame = 1;
+        s->lastTick = client.currentTicks;
     }
 }
 
@@ -109,26 +120,6 @@ void setupFontTiles(SDL_Rect f[], int num)
     }
 }
 
-// delete later?
-void drawString(char *string, int y)
-{
-    // only draw a string max length of 40 characters! (1,280 res width / (8 * 4) don't forget the upscale of 4x
-    // technically can be drawn closer due to the way I've drawn the pixel art!
-    int x = 0;
-    int len = strlen(string);
-    if(len > MAX_LEN)
-        len = MAX_LEN; // max out at 40
-
-    for(int i = 0; i < len; i++)
-    {
-        drawLetter(string[i], x, y, 4);
-        if(string[i] == 'i')
-            x += ((FONT_WIDTH - 4) * 4); // more for i...maybe l?
-        else
-            x += ((FONT_WIDTH - 2) * 4); // Minus two for distancing...kerning(?)
-    }
-}
-
 // To review...
 void drawFPS(int fps)
 {
@@ -151,81 +142,6 @@ void drawFPS(int fps)
         x = 1064 - (i * 8);
         drawLetter(c, x, 0, 1);
     }   
-}
-
-// delete later?
-void drawAnimatedLine(LineStruct *L, int currentTicks, CursorStruct *C) {
-    int drawX = L->x;
-    for(int i = 0; i < L->currentFrame; i++)
-    {
-        char c = L->string[i];
-        drawLetter(c, drawX, L->y, L->s);
-        if(c == 'i')
-            drawX += ((FONT_WIDTH - 4) * L->s); // more for i...maybe l?
-        else
-            drawX += ((FONT_WIDTH - 2) * L->s); // Minus two for distancing...kerning(?)            
-    }
-    int deltaTicks = currentTicks - L->lastTick;
-    if(deltaTicks > L->delay)
-    {
-        L->currentFrame++;
-        if(L->currentFrame > L->length)
-            L->currentFrame = L->length; // prevent out of bounds
-        L->lastTick = currentTicks;
-        C->x += ((FONT_WIDTH - 2) * L->s);
-        if(C->x > drawX)
-            C->x = drawX;
-    }
-}
-
-// TO DO: move with other text related functions to new file
-void drawCursor(CursorStruct *C, int currentTicks) // TO DO: add a function for changing location of cursor
-{
-    char c;
-    if(C->currentFrame == 1)
-        c = C->c2;
-    else
-        c = C->c1;
-    drawLetter(c, C->x, C->y, C->s);
-    int deltaTicks = currentTicks - C->lastTick;
-    if(deltaTicks > C->delay)
-    {
-        C->currentFrame++;
-        if(C->currentFrame > 1)
-            C->currentFrame = 0; // I think there's a better way to do this but whatever
-        C->lastTick = currentTicks;
-    }
-}
-
-// delete later?
-void drawParagraph(TextStruct *T, int currentTicks, CursorStruct *C)
-{
-    int drawX = 10;
-    int drawY = 10;
-    int scale = 4;
-    int delay = 450;
-
-    for(int i = 0; i <= T->currentLetter; i++)
-    {
-        char c = T->string1[i];
-        drawLetter(c, drawX, drawY, scale);
-        if(c == 'i')
-            drawX += ((FONT_WIDTH - 4) * scale); // more for i...maybe l?
-        else
-            drawX += ((FONT_WIDTH - 2) * scale); // Minus two for distancing...kerning(?)
-    }
-                 
-    int deltaTicks = currentTicks - T->lastTick;
-    if(deltaTicks > delay)
-    {
-        T->currentLetter++;
-        if(T->currentLetter > T->string1Len)
-            T->currentLetter = T->string1Len;
-        T->lastTick = currentTicks;
-        C->x += ((FONT_WIDTH - 2) * scale);
-        if(C->x > drawX)
-            C->x = drawX;
-    }
 }
 
 // delete later?
@@ -298,9 +214,4 @@ void checkFocus(int cx, int cy, Camera_t *c)
     }
     else
         return;        
-}
-
-// delete later?
-void drawMenu() {
-    drawString("Please enter your terminal number", 100);
 }

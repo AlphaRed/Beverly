@@ -24,6 +24,8 @@ typedef struct Client_t { // For all things client!
     SDL_Renderer *renderer;
     Gamestate gamestate;
     int currentTicks;
+    int drawX;
+    int drawY;
 } Client_t;
 
 typedef struct Vec2_t {
@@ -39,6 +41,7 @@ typedef struct Sprite_t { // add to it as you go...
     int scale;
     int frame;
     int cols;
+    int lastTick; // used only for cursor...so far...
     SDL_Texture *img;
 } Sprite_t;
 
