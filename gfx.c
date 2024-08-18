@@ -12,25 +12,65 @@ SDL_Texture *loadImage(char *filename) {
     return tex;
 }
 
-void blitSprite(Sprite_t s) {
+void blitSprite(Sprite_t *s) {
     SDL_Rect srcRect, destRect;
-    srcRect.x = (s.frame % s.cols) * s.w;
-    srcRect.y = (s.frame / s.cols) * s.h;
-    srcRect.w = s.w;
-    srcRect.h = s.h;
+    srcRect.x = (s->frame % s->cols) * s->w;
+    srcRect.y = (s->frame / s->cols) * s->h;
+    srcRect.w = s->w;
+    srcRect.h = s->h;
 
-    if(s.scale == 0) // full screen blit
-        SDL_RenderCopy(client.renderer, s.img, &srcRect, NULL);
+    /* in case of fire
+    printf("x: %d\n", srcRect.x);
+    printf("y: %d\n", srcRect.y);
+    printf("w: %d\n", srcRect.w);
+    printf("h: %d\n", srcRect.h);
+    */
+
+    if(s->scale == 0) // full screen blit
+        SDL_RenderCopy(client.renderer, s->img, &srcRect, NULL);
     else {
-        destRect.x = s.x;
-        destRect.y = s.y;
-        destRect.w = s.w * s.scale;
-        destRect.h = s.h * s.scale;
-        SDL_RenderCopy(client.renderer, s.img, &srcRect, &destRect);
+        destRect.x = s->x;
+        destRect.y = s->y;
+        destRect.w = s->w * s->scale;
+        destRect.h = s->h * s->scale;
+        SDL_RenderCopy(client.renderer, s->img, &srcRect, &destRect);
     }
 }
 
-// might not be needed anymore
+void drawChar(Sprite_t *s, char c, int x, int y) { // rename later? really small function
+    s->frame = c - 32;
+    s->x = x;
+    s->y = y;
+    blitSprite(s);
+}
+
+void drawLine(String_t *str, Sprite_t *s, int currentTicks) {
+    int drawX = 5; // start in a little
+    for(int i = 0; i < str->index; i++)
+    {
+        char c = str->data[i];
+        drawChar(s, c, drawX, str->y); // not sure we need a separate function?
+        if(c == 'i')
+            drawX += ((FONT_WIDTH - 4) * s->scale); // more for i...maybe l?
+        else
+            drawX += ((FONT_WIDTH - 2) * s->scale); // Minus two for distancing...kerning(?)            
+    }
+    int deltaTicks = currentTicks - str->lastTick;
+    if(deltaTicks > 200) // delay hardcoded for now
+    {
+        str->index++;
+        if(str->index > str->len)
+            str->index = str->len; // prevent out of bounds
+        str->lastTick = currentTicks;
+        /*
+        C->x += ((FONT_WIDTH - 2) * L->s);
+        if(C->x > drawX)
+            C->x = drawX;
+        */
+    }
+}
+
+// might not be needed anymore...to remove from drawletter and drawmap(?)
 void blitTile(SDL_Texture *image, int x, int y, int w, int h, SDL_Rect destRect) {
     SDL_Rect srcRect;
     srcRect.x = x;
@@ -41,8 +81,7 @@ void blitTile(SDL_Texture *image, int x, int y, int w, int h, SDL_Rect destRect)
     SDL_RenderCopy(client.renderer, image, &srcRect, &destRect);
 }
 
-
-// TO DO: move with other text related functions to new file
+// delete later?
 void drawLetter(char c, int x, int y, int s)
 {
     //int x = ((c - 32) % 8) * 8; // ASCII starts at char = 32, font width = 8px
@@ -58,7 +97,7 @@ void drawLetter(char c, int x, int y, int s)
     blitTile(font, fontTiles[fontIndex].x, fontTiles[fontIndex].y, fontTiles[fontIndex].w, fontTiles[fontIndex].h, destRect);
 }
 
-// TO DO: move with other text related functions to new file
+// delete later?
 void setupFontTiles(SDL_Rect f[], int num)
 {
     for(int i = 0; i < num; i++)
@@ -70,8 +109,8 @@ void setupFontTiles(SDL_Rect f[], int num)
     }
 }
 
-// TO DO: move with other text related functions to new file
-void drawString(char *string, int y) // this can possibly be discarded...
+// delete later?
+void drawString(char *string, int y)
 {
     // only draw a string max length of 40 characters! (1,280 res width / (8 * 4) don't forget the upscale of 4x
     // technically can be drawn closer due to the way I've drawn the pixel art!
@@ -90,7 +129,7 @@ void drawString(char *string, int y) // this can possibly be discarded...
     }
 }
 
-// TO DO: move with other text related functions to new file
+// To review...
 void drawFPS(int fps)
 {
     char c;
@@ -114,9 +153,8 @@ void drawFPS(int fps)
     }   
 }
 
-// TO DO: move with other text related functions to new file
-void drawAnimatedLine(LineStruct *L, int currentTicks, CursorStruct *C)
-{
+// delete later?
+void drawAnimatedLine(LineStruct *L, int currentTicks, CursorStruct *C) {
     int drawX = L->x;
     for(int i = 0; i < L->currentFrame; i++)
     {
@@ -159,7 +197,7 @@ void drawCursor(CursorStruct *C, int currentTicks) // TO DO: add a function for 
     }
 }
 
-// TO DO: move with other text related functions to new file
+// delete later?
 void drawParagraph(TextStruct *T, int currentTicks, CursorStruct *C)
 {
     int drawX = 10;
@@ -190,6 +228,7 @@ void drawParagraph(TextStruct *T, int currentTicks, CursorStruct *C)
     }
 }
 
+// delete later?
 void drawTile(SDL_Texture *t, int index, int x, int y, int s)
 {
     SDL_Rect destRect;
@@ -201,6 +240,7 @@ void drawTile(SDL_Texture *t, int index, int x, int y, int s)
     blitTile(t, mapTiles[index].x, mapTiles[index].y, mapTiles[index].w, mapTiles[index].h, destRect);
 }
 
+// delete later?
 void drawMap(SDL_Texture *map, int offsetX, int offsetY)
 {
     for(int h = 0; h < MAX_MAP_HEIGHT; h++)
@@ -229,6 +269,7 @@ void drawMap(SDL_Texture *map, int offsetX, int offsetY)
     }
 }
 
+// delete later?
 void checkFocus(int cx, int cy, Camera_t *c)
 {
     int h = 0;
@@ -259,6 +300,7 @@ void checkFocus(int cx, int cy, Camera_t *c)
         return;        
 }
 
+// delete later?
 void drawMenu() {
     drawString("Please enter your terminal number", 100);
 }

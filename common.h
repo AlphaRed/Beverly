@@ -41,6 +41,14 @@ typedef struct Sprite_t { // add to it as you go...
     SDL_Texture *img;
 } Sprite_t;
 
+typedef struct String_t {
+    char *data;
+    int len;
+    int y;
+    int index;
+    int lastTick;
+} String_t;
+
 typedef struct
 {
     int x;

@@ -17,6 +17,7 @@ int heightMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
 Client_t client;
 Sprite_t bg;
 Sprite_t bust;
+Sprite_t text;
 
 int main(int argc, char *args[]) {    
     // SDL setup
@@ -48,6 +49,22 @@ int main(int argc, char *args[]) {
     bg.frame = 0;
     bg.cols = 1;
     bg.img = loadImage("art/bg.png");
+
+    text.x = 0;
+    text.y = 0;
+    text.w = 8;
+    text.h = 12;
+    text.scale = 2; // go with 2x for now...
+    text.frame = 0;
+    text.cols = 16;
+    text.img = loadImage("art/font-ascii.png");
+
+    String_t testStr;
+    testStr.data = "I'm back Otacon.";
+    testStr.len = 16;
+    testStr.y = 0;
+    testStr.index = 0;
+    testStr.lastTick = 0;
     
     int quit = 1;
     SDL_Event e;
@@ -93,13 +110,17 @@ int main(int argc, char *args[]) {
 
         if(client.gamestate == GAME)
         {  
-            blitSprite(bg);   
-            drawMap(tiles, cam.offsetX, cam.offsetY);
+            blitSprite(&bg);
+            blitSprite(&bust); 
+            //drawMap(tiles, cam.offsetX, cam.offsetY);
         }
         else if(client.gamestate == MENU)
         {
-            blitSprite(bg);
-            blitSprite(bust);
+            //blitSprite(&bg);
+            //blitSprite(&bust);
+            //blitSprite(&text);
+            //drawChar(&text, 'H', 0, 0);
+            drawLine(&testStr, &text, current_ticks);
             //drawMenu();
         }
         
