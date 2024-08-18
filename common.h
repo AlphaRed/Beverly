@@ -23,6 +23,7 @@ typedef struct Client_t { // For all things client!
     SDL_Window *window;
     SDL_Renderer *renderer;
     Gamestate gamestate;
+    int currentTicks;
 } Client_t;
 
 typedef struct Vec2_t {

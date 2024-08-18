@@ -9,7 +9,7 @@ extern Client_t client;
 int initSDL();
 void cleanup();
 SDL_Rect initTile(int x, int y, int w, int h);
-int calculateFPS(int currentTicks);
+int calculateFPS();
 void loadResources();
 
 // to be moved elsewhere

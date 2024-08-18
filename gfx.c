@@ -44,7 +44,7 @@ void drawChar(Sprite_t *s, char c, int x, int y) { // rename later? really small
     blitSprite(s);
 }
 
-void drawLine(String_t *str, Sprite_t *s, int currentTicks) {
+void drawLine(String_t *str, Sprite_t *s) {
     int drawX = 5; // start in a little
     for(int i = 0; i < str->index; i++)
     {
@@ -55,13 +55,13 @@ void drawLine(String_t *str, Sprite_t *s, int currentTicks) {
         else
             drawX += ((FONT_WIDTH - 2) * s->scale); // Minus two for distancing...kerning(?)            
     }
-    int deltaTicks = currentTicks - str->lastTick;
+    int deltaTicks = client.currentTicks - str->lastTick;
     if(deltaTicks > 200) // delay hardcoded for now
     {
         str->index++;
         if(str->index > str->len)
             str->index = str->len; // prevent out of bounds
-        str->lastTick = currentTicks;
+        str->lastTick = client.currentTicks;
         /*
         C->x += ((FONT_WIDTH - 2) * L->s);
         if(C->x > drawX)

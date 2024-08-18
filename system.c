@@ -62,9 +62,9 @@ SDL_Rect initTile(int x, int y, int w, int h) {
     return tileRect;
 }
 
-int calculateFPS(int currentTicks) {
+int calculateFPS() {
     int fps = 0;
-    int deltaTicks = SDL_GetTicks() - currentTicks;
+    int deltaTicks = SDL_GetTicks() - client.currentTicks;
         
     if(deltaTicks > 0)
         fps = 1000 / deltaTicks;
@@ -73,7 +73,7 @@ int calculateFPS(int currentTicks) {
         int delay_time = (1000 / MAX_FPS) - deltaTicks;
         SDL_Delay(delay_time);
         // check again to see that it is fixed
-        deltaTicks = SDL_GetTicks() - currentTicks;
+        deltaTicks = SDL_GetTicks() - client.currentTicks;
         fps = 1000 / deltaTicks;
     }
     return fps;

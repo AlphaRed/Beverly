@@ -68,7 +68,7 @@ int main(int argc, char *args[]) {
     
     int quit = 1;
     SDL_Event e;
-    int current_ticks;
+    //int current_ticks;
     int fps_counter = 0;
     int renderTicks = 0;
     client.gamestate = MENU;
@@ -87,7 +87,7 @@ int main(int argc, char *args[]) {
     // Game loop
     while(quit)
     {
-        current_ticks = SDL_GetTicks();
+        client.currentTicks = SDL_GetTicks();
 
         // Input
         SDL_PollEvent(&e);
@@ -120,13 +120,13 @@ int main(int argc, char *args[]) {
             //blitSprite(&bust);
             //blitSprite(&text);
             //drawChar(&text, 'H', 0, 0);
-            drawLine(&testStr, &text, current_ticks);
+            drawLine(&testStr, &text);
             //drawMenu();
         }
         
         drawFPS(fps_counter);
         SDL_RenderPresent(client.renderer);
-        fps_counter = calculateFPS(current_ticks);
+        fps_counter = calculateFPS(client.currentTicks);
     }
 
     cleanup();
