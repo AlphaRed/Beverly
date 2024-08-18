@@ -37,11 +37,6 @@ typedef struct Client_t { // For all things client!
     DrawList_t *DLhead;
 } Client_t;
 
-typedef struct Vec2_t {
-    int x;
-    int y;
-} Vec2_t;
-
 typedef struct Sprite_t { // add to it as you go...
     int x; // for now, change to vec2 later on?
     int y;
@@ -64,30 +59,6 @@ typedef struct String_t {
 
 typedef struct
 {
-    int x;
-    int y;
-    int s;
-    char c1;
-    char c2;
-    int currentFrame;
-    int delay;
-    int lastTick;
-} CursorStruct;
-
-typedef struct
-{
-    int x;
-    int y;
-    int s;
-    char *string;
-    int length;
-    int currentFrame;
-    int delay;
-    int lastTick;
-} LineStruct;
-
-typedef struct
-{
     //int x;
     //int y;
     ///int s;
@@ -100,12 +71,5 @@ typedef struct
     //int delay;
     int lastTick;
 } TextStruct;
-
-typedef struct Camera_t
-{
-    int offsetX;
-    int offsetY;
-    int focus;
-} Camera_t;
 
 #endif

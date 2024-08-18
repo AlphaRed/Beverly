@@ -52,16 +52,6 @@ void cleanup() {
     SDL_Quit();
 }
 
-SDL_Rect initTile(int x, int y, int w, int h) {
-    SDL_Rect tileRect;
-    tileRect.x = x;
-    tileRect.y = y;
-    tileRect.w = w;
-    tileRect.h = h;
-
-    return tileRect;
-}
-
 int calculateFPS() {
     int fps = 0;
     int deltaTicks = SDL_GetTicks() - client.currentTicks;
@@ -114,10 +104,6 @@ void closeTextFile(FILE *f) {
 }
 
 void loadResources() {
-    tiles = loadImage("art/maptiles.png");
-    if(tiles == NULL)
-        printf("Map tiles image failed to load.\n");
-    
     font = loadImage("art/font-ascii.png");
     if(font == NULL)
         printf("Font image filed to load.\n");

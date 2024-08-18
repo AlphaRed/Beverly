@@ -5,7 +5,6 @@
 #include "map.h"
 
 // resources
-SDL_Texture *tiles;
 SDL_Texture *font;
 
 SDL_Rect fontTiles[FONT_NUM];
@@ -90,12 +89,6 @@ int main(int argc, char *args[]) {
         printf("Error loading map!\n");
     if(loadHeightMap("data/heightmap.txt") == 1)
         printf("Error loading height map!\n");
-    
-    // center it initially
-    // Setup camera
-    Camera_t cam;
-    cam.offsetX = (SCREEN_WIDTH / 2) - (TILE_SIZE * 4);
-    cam.offsetY = 0;
 
     // drawlist testing
     SDL_Rect sRect, dRect;
@@ -149,7 +142,7 @@ int main(int argc, char *args[]) {
         }
         else if(client.gamestate == MENU)
         {
-            //blitSprite(&bg);
+            blitSprite(&bg); // clearing colour
             //blitSprite(&bust);
             //blitSprite(&text);
             //drawChar(&text, 'H', 0, 0);
