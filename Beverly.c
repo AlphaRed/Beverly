@@ -76,7 +76,7 @@ int main(int argc, char *args[]) {
     testStr.y = 0;
     testStr.index = 0;
     testStr.lastTick = 0;
-    
+
     int quit = 1;
     SDL_Event e;
     int fps_counter = 0;
@@ -84,6 +84,7 @@ int main(int argc, char *args[]) {
     client.gamestate = MENU;
     client.drawX = 0;
     client.drawY = 0;
+    client.DLhead = NULL;
 
     if(loadMap("data/map.txt") == 1)
         printf("Error loading map!\n");
@@ -95,6 +96,26 @@ int main(int argc, char *args[]) {
     Camera_t cam;
     cam.offsetX = (SCREEN_WIDTH / 2) - (TILE_SIZE * 4);
     cam.offsetY = 0;
+
+    // drawlist testing
+    SDL_Rect sRect, dRect;
+    sRect.x = 0;
+    sRect.y = 0;
+    sRect.w = 76;
+    sRect.h = 117;
+    dRect.x = 0;
+    dRect.y = 0;
+    dRect.w = 76;
+    dRect.h = 117;
+    SDL_Texture * testimg = loadImage("art/bust.png");
+    client.DLhead = addSprite(client.DLhead, 1, testimg, sRect, dRect);
+    dRect.x = 50;
+    dRect.y = 50;
+    dRect.w = 76;
+    dRect.h = 117;
+    client.DLhead = addSprite(client.DLhead, 2, testimg, sRect, dRect);
+
+    printSprites();
 
     // Game loop
     while(quit)
@@ -132,8 +153,9 @@ int main(int argc, char *args[]) {
             //blitSprite(&bust);
             //blitSprite(&text);
             //drawChar(&text, 'H', 0, 0);
-            drawLine(&testStr, &text);
-            drawCursor(&cursor);
+            //drawLine(&testStr, &text);
+            //drawCursor(&cursor);
+            renderDrawList();
         }
         
         drawFPS(fps_counter);

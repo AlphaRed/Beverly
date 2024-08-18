@@ -19,6 +19,14 @@
 
 typedef enum {MENU, GAME} Gamestate;
 
+typedef struct DrawList_t {
+    int id; // might use as an identifier!
+    SDL_Texture *img;
+    SDL_Rect srcRect;
+    SDL_Rect destRect;
+    struct DrawList_t *next;
+} DrawList_t;
+
 typedef struct Client_t { // For all things client!
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -26,6 +34,7 @@ typedef struct Client_t { // For all things client!
     int currentTicks;
     int drawX;
     int drawY;
+    DrawList_t *DLhead;
 } Client_t;
 
 typedef struct Vec2_t {

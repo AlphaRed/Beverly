@@ -25,4 +25,9 @@ void drawTile(SDL_Texture *t, int index, int x, int y, int s);
 void drawMap(SDL_Texture *map, int offsetX, int offsetY);
 void checkFocus(int cx, int cy, Camera_t *c);
 
+DrawList_t *addSprite(DrawList_t *head, int data, SDL_Texture *i, SDL_Rect sr, SDL_Rect dr);
+int removeSprite(DrawList_t *head, int data);
+void printSprites();
+void renderDrawList();
+
 #endif

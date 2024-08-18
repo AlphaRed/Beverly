@@ -215,3 +215,56 @@ void checkFocus(int cx, int cy, Camera_t *c)
     else
         return;        
 }
+
+// add a sprite
+DrawList_t *addSprite(DrawList_t *head, int data, SDL_Texture *i, SDL_Rect sr, SDL_Rect dr) {
+    DrawList_t *new = NULL;
+    new = malloc(sizeof(DrawList_t));
+    if(new == NULL)
+        return NULL;
+    new->id = data;
+    new->img = i;
+    new->srcRect = sr;
+    new->destRect = dr;
+    new->next = head;
+    printf("Added a sprite-> %d\n", new->id);
+    return new;
+}
+
+// remove a sprite...untested but should work!
+int removeSprite(DrawList_t *head, int data) {
+    DrawList_t *current = head;
+    DrawList_t *prev = head;
+    while(current != NULL) {
+        if(current->id == data) {
+            if(current == head){
+                head = current->next;
+            }
+            else {
+                prev->next = current->next;
+            }
+            return 1;
+        }
+        prev = current;
+        current = current->next;
+    }
+    return 0;
+}
+
+// print the sprites
+void printSprites() {
+    DrawList_t *current = client.DLhead;
+    while(current != NULL) {
+        printf("%d->", current->id);
+        current = current->next;
+    }
+    printf("\n");
+}
+
+void renderDrawList() {
+    DrawList_t *current = client.DLhead;
+    while(current != NULL) {
+        SDL_RenderCopy(client.renderer, current->img, &current->srcRect, &current->destRect);
+        current = current->next;
+    }
+}
