@@ -8,8 +8,6 @@ extern Client_t client;
 extern SDL_Texture *font;
 extern SDL_Rect fontTiles[FONT_NUM];
 extern SDL_Rect mapTiles[TILE_NUM];
-extern int levelMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
-extern int heightMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
 
 SDL_Texture *loadImage(char *filename);
 void blitSprite(Sprite_t *s);
@@ -22,11 +20,12 @@ void drawLetter(char c, int x, int y, int s);
 void setupFontTiles(SDL_Rect f[], int num);
 void drawFPS(int fps);
 void drawTile(SDL_Texture *t, int index, int x, int y, int s);
-void drawMap(SDL_Texture *map, int offsetX, int offsetY);
 // these are good...rreview the above
 DrawList_t *addSprite(DrawList_t *head, int data, SDL_Texture *i, SDL_Rect sr, SDL_Rect dr);
 int removeSprite(DrawList_t *head, int data);
 void printSprites();
 void renderDrawList();
+void drawCursorNew(Sprite_t *s);
+int drawRow(String_t *str, Sprite_t spr);
 
 #endif

@@ -2,7 +2,7 @@
 #include "events.h"
 #include "gfx.h"
 #include "system.h"
-#include "map.h"
+#include "text.h"
 
 // resources
 SDL_Texture *font;
@@ -10,14 +10,27 @@ SDL_Texture *font;
 SDL_Rect fontTiles[FONT_NUM];
 SDL_Rect mapTiles[TILE_NUM];
 
-int levelMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
-int heightMap[MAX_MAP_SIZE][MAX_MAP_SIZE];
-
 Client_t client;
 Sprite_t bg;
 Sprite_t bust;
 Sprite_t text;
 Sprite_t cursor;
+
+String_t stringy;
+
+void checkDelay(FILE *f) {
+    int deltaTicks = client.currentTicks - client.prevTicks;
+    int endofRow = 0;
+    if(deltaTicks > 400) { // hardcoded for now
+        endofRow = drawRow(&stringy, text);
+        client.prevTicks = client.currentTicks;
+    }
+    if(endofRow == 1) {
+        loadText(f, &stringy);
+        client.drawY += 12 * 2;
+        client.drawX = 0;
+    }
+}
 
 int main(int argc, char *args[]) {    
     // SDL setup
@@ -29,7 +42,6 @@ int main(int argc, char *args[]) {
     // Load in images and tiles
     loadResources();
     setupFontTiles(fontTiles, FONT_NUM); // move this?
-    setupMapTiles(mapTiles, TILE_NUM);
     
     // will need to move these...eventually!
     bust.x = 50;
@@ -70,7 +82,7 @@ int main(int argc, char *args[]) {
     cursor.img = loadImage("art/cursor.png");
 
     String_t testStr;
-    testStr.data = "I'm back Otacon.";
+    //testStr.data = "I'm back Otacon.";
     testStr.len = 16;
     testStr.y = 0;
     testStr.index = 0;
@@ -81,14 +93,10 @@ int main(int argc, char *args[]) {
     int fps_counter = 0;
     int renderTicks = 0;
     client.gamestate = MENU;
+    client.prevTicks = 0;
     client.drawX = 0;
     client.drawY = 0;
     client.DLhead = NULL;
-
-    if(loadMap("data/map.txt") == 1)
-        printf("Error loading map!\n");
-    if(loadHeightMap("data/heightmap.txt") == 1)
-        printf("Error loading height map!\n");
 
     // drawlist testing
     SDL_Rect sRect, dRect;
@@ -101,7 +109,7 @@ int main(int argc, char *args[]) {
     dRect.w = 76;
     dRect.h = 117;
     SDL_Texture * testimg = loadImage("art/bust.png");
-    client.DLhead = addSprite(client.DLhead, 1, testimg, sRect, dRect);
+    //client.DLhead = addSprite(client.DLhead, 1, testimg, sRect, dRect);
     dRect.x = 50;
     dRect.y = 50;
     dRect.w = 76;
@@ -110,38 +118,41 @@ int main(int argc, char *args[]) {
 
     printSprites();
 
+    //drawCursorNew(&cursor);
+    FILE *t = openTextFile("string.txt");
+    loadText(t, &stringy);
+
     // Game loop
-    while(quit)
-    {
+    while(quit) {
         client.currentTicks = SDL_GetTicks();
 
         // Input
         SDL_PollEvent(&e);
-        if(client.gamestate == GAME)
-        {
+        if(client.gamestate == GAME) {
             quit = checkGameEvents(e);
         }
-        else if(client.gamestate == MENU)
-        {
+        else if(client.gamestate == MENU) {
             quit = checkMenuEvents(e);
             if(quit == 2)
                 client.gamestate = GAME;
         }
 
         // Logic
-        if(client.gamestate == GAME)
+        if(client.gamestate == GAME) {
+            checkDelay(t);
+        }
+        else if(client.gamestate == MENU) {
+            checkDelay(t);
+        }
 
         // Render
         renderTicks = SDL_GetTicks();
 
-        if(client.gamestate == GAME)
-        {  
+        if(client.gamestate == GAME) {  
             blitSprite(&bg);
             blitSprite(&bust); 
-            //drawMap(tiles, cam.offsetX, cam.offsetY);
         }
-        else if(client.gamestate == MENU)
-        {
+        else if(client.gamestate == MENU) {
             blitSprite(&bg); // clearing colour
             //blitSprite(&bust);
             //blitSprite(&text);
@@ -155,7 +166,7 @@ int main(int argc, char *args[]) {
         SDL_RenderPresent(client.renderer);
         fps_counter = calculateFPS(client.currentTicks);
     }
-
+    closeTextFile(t);
     cleanup();
     return 0;
 }

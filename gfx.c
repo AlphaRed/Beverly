@@ -156,35 +156,6 @@ void drawTile(SDL_Texture *t, int index, int x, int y, int s)
     blitTile(t, mapTiles[index].x, mapTiles[index].y, mapTiles[index].w, mapTiles[index].h, destRect);
 }
 
-// delete later?
-void drawMap(SDL_Texture *map, int offsetX, int offsetY)
-{
-    for(int h = 0; h < MAX_MAP_HEIGHT; h++)
-    {
-        for(int i = 0; i < MAX_MAP_SIZE; i++)
-        {
-            for(int j = 0; j < MAX_MAP_SIZE; j++)
-            {   
-                if(heightMap[j][i] == h)
-                {
-                    if(levelMap[j][i] == 1) // need to make this more robust, but it works for now
-                    {
-                        int x = (j - i) * 64 + offsetX;
-                        int y = (j + i) * 32 + offsetY - (TILE_SIZE * 2 * h);
-                        drawTile(map, 1, x, y, 4);
-                    }
-                    if(levelMap[j][i] == 0)
-                    {
-                        int x = (j - i) * 64 + offsetX;
-                        int y = (j + i) * 32 + offsetY - (TILE_SIZE * 2 * h);
-                        drawTile(map, 0, x, y, 4);
-                    }
-                }          
-            }
-        }
-    }
-}
-
 // add a sprite
 DrawList_t *addSprite(DrawList_t *head, int data, SDL_Texture *i, SDL_Rect sr, SDL_Rect dr) {
     DrawList_t *new = NULL;
@@ -235,5 +206,52 @@ void renderDrawList() {
     while(current != NULL) {
         SDL_RenderCopy(client.renderer, current->img, &current->srcRect, &current->destRect);
         current = current->next;
+    }
+}
+
+void drawCursorNew(Sprite_t *s) {
+    SDL_Rect destRect = {client.drawX, client.drawY, 8 * 2, 12 * 2};
+    SDL_Rect srcRect;
+    srcRect.x = (s->frame % s->cols) * s->w;
+    srcRect.y = (s->frame / s->cols) * s->h;
+    srcRect.w = s->w;
+    srcRect.h = s->h;
+    
+    client.DLhead = addSprite(client.DLhead, 3, s->img, srcRect, destRect);
+    int deltaTicks = client.currentTicks - s->lastTick;
+    if(deltaTicks > 400) { // delay is hardcoded...s/b slower than draw
+        if(s->frame >= 1)
+            s->frame = 0;
+        else
+            s->frame = 1;
+        s->lastTick = client.currentTicks;
+    }
+}
+
+int drawRow(String_t *str, Sprite_t spr) {
+    char c = str->data[str->index];
+    //printf("Char: %c\n", c);
+
+    int frame = c - 32;
+    SDL_Rect srcRect;
+    srcRect.x = (frame % spr.cols) * spr.w;
+    srcRect.y = (frame / spr.cols) * spr.h;
+    srcRect.w = spr.w;
+    srcRect.h = spr.h;
+
+    SDL_Rect destRect;
+    destRect.x = client.drawX;
+    destRect.y = client.drawY;
+    destRect.w = spr.w * spr.scale;
+    destRect.h = spr.h * spr.scale;
+
+    if(str->index <= str->len) {
+        client.DLhead = addSprite(client.DLhead, 3, spr.img, srcRect, destRect);
+        str->index++;
+        client.drawX += 8 * 2;
+    }
+    else { // string/row is done
+        // need to clear data
+        return 1;
     }
 }

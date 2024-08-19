@@ -11,9 +11,4 @@ SDL_Rect initTile(int x, int y, int w, int h);
 int calculateFPS();
 void loadResources();
 
-// to be moved elsewhere
-FILE *openTextFile(char *filename);
-int loadTextFile(FILE *f, TextStruct *t); 
-void closeTextFile(FILE *f);
-
 #endif
