@@ -8,7 +8,6 @@
 SDL_Texture *font;
 
 SDL_Rect fontTiles[FONT_NUM];
-SDL_Rect mapTiles[TILE_NUM];
 
 Client_t client;
 Sprite_t bg;
@@ -16,17 +15,17 @@ Sprite_t bust;
 Sprite_t text;
 Sprite_t cursor;
 
-String_t stringy;
+String_t stringFile;
 
 void checkDelay(FILE *f) {
     int deltaTicks = client.currentTicks - client.prevTicks;
     int endofRow = 0;
     if(deltaTicks > 400) { // hardcoded for now
-        endofRow = drawRow(&stringy, text);
+        endofRow = drawRow(&stringFile, text);
         client.prevTicks = client.currentTicks;
     }
     if(endofRow == 1) {
-        loadText(f, &stringy);
+        loadText(f, &stringFile);
         client.drawY += 12 * 2;
         client.drawX = 0;
     }
@@ -81,13 +80,6 @@ int main(int argc, char *args[]) {
     cursor.lastTick = 0;
     cursor.img = loadImage("art/cursor.png");
 
-    String_t testStr;
-    //testStr.data = "I'm back Otacon.";
-    testStr.len = 16;
-    testStr.y = 0;
-    testStr.index = 0;
-    testStr.lastTick = 0;
-
     int quit = 1;
     SDL_Event e;
     int fps_counter = 0;
@@ -104,12 +96,7 @@ int main(int argc, char *args[]) {
     sRect.y = 0;
     sRect.w = 76;
     sRect.h = 117;
-    dRect.x = 0;
-    dRect.y = 0;
-    dRect.w = 76;
-    dRect.h = 117;
     SDL_Texture * testimg = loadImage("art/bust.png");
-    //client.DLhead = addSprite(client.DLhead, 1, testimg, sRect, dRect);
     dRect.x = 50;
     dRect.y = 50;
     dRect.w = 76;
@@ -119,8 +106,8 @@ int main(int argc, char *args[]) {
     printSprites();
 
     //drawCursorNew(&cursor);
-    FILE *t = openTextFile("string.txt");
-    loadText(t, &stringy);
+    FILE *t = openTextFile("data/string.txt");
+    loadText(t, &stringFile);
 
     // Game loop
     while(quit) {
@@ -154,10 +141,6 @@ int main(int argc, char *args[]) {
         }
         else if(client.gamestate == MENU) {
             blitSprite(&bg); // clearing colour
-            //blitSprite(&bust);
-            //blitSprite(&text);
-            //drawChar(&text, 'H', 0, 0);
-            //drawLine(&testStr, &text);
             //drawCursor(&cursor);
             renderDrawList();
         }

@@ -144,18 +144,6 @@ void drawFPS(int fps)
     }   
 }
 
-// delete later?
-void drawTile(SDL_Texture *t, int index, int x, int y, int s)
-{
-    SDL_Rect destRect;
-    destRect.x = x;
-    destRect.y = y;
-    destRect.w = TILE_SIZE * s;
-    destRect.h = TILE_SIZE * s;
-    
-    blitTile(t, mapTiles[index].x, mapTiles[index].y, mapTiles[index].w, mapTiles[index].h, destRect);
-}
-
 // add a sprite
 DrawList_t *addSprite(DrawList_t *head, int data, SDL_Texture *i, SDL_Rect sr, SDL_Rect dr) {
     DrawList_t *new = NULL;

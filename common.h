@@ -8,14 +8,9 @@
 
 #define SCREEN_WIDTH    1280 // keep it 16:9
 #define SCREEN_HEIGHT   720
-#define TILE_SIZE 32
-#define TILE_SCALE 2
 #define FONT_NUM 200
 #define MAX_FPS 60
 #define MAX_CHARS 80 // equals 1280 / 8px / 2 scale
-#define MAX_MAP_SIZE 10
-#define MAX_MAP_HEIGHT 3
-#define TILE_NUM 64
 
 typedef enum {MENU, GAME} Gamestate;
 
