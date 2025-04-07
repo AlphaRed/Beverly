@@ -8,22 +8,14 @@ int initWindow() {
         return 1;
     }
     else
-        client.window = SDL_CreateWindow("Beverly", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+        client.window = SDL_CreateWindow("Beverly", SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_FULLSCREEN);
     return 0;
 }
 
 int initRenderer() {
-    client.renderer = SDL_CreateRenderer(client.window, -1, SDL_RENDERER_ACCELERATED);
+    client.renderer = SDL_CreateRenderer(client.window, NULL);
     if(client.renderer == NULL) {
         printf("Renderer failed to be created: %s\n", SDL_GetError());
-        return 1;
-    }
-    return 0;
-}
-
-int initIMG() {
-    if(IMG_Init(IMG_INIT_PNG) < 0) {
-        printf("SDL_Image library failed to initialize: %s", IMG_GetError());
         return 1;
     }
     return 0;
@@ -38,17 +30,12 @@ int initSDL() {
         printf("initRenderer failed.\n");
         return 1;
     }
-    if(initIMG()) {
-        printf("initIMG failed.\n");
-        return 1;
-    }
     return 0;
 }
 
 void cleanup() {
     SDL_DestroyRenderer(client.renderer);
     SDL_DestroyWindow(client.window);
-    IMG_Quit();
     SDL_Quit();
 }
 

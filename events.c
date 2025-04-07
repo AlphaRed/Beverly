@@ -3,47 +3,48 @@
 
 int checkGameEvents(SDL_Event e)
 {
-    if(e.type == SDL_QUIT)
+    if(e.type == SDL_EVENT_QUIT)
         return 0;
-    else if(e.type == SDL_KEYDOWN)
+    else if(e.type == SDL_EVENT_KEY_DOWN)
     {
-        switch(e.key.keysym.sym)
+        /*
+        switch(e.key.key)
         {
-            /*
-            case SDLK_w:
+            case SDLK_W:
                 c->y -= 1;
                 if(c->y < 0)
                     c->y = 0;
                 break;
-            case SDLK_s:
+            case SDLK_S:
                 c->y += 1;
                 if(c->y > MAX_MAP_SIZE - 1)
                     c->y = MAX_MAP_SIZE - 1;
                 break;
-            case SDLK_a:
+            case SDLK_A:
                 c->x -= 1;
                 if(c->x < 0)
                     c->x = 0;
                 break;
-            case SDLK_d:
+            case SDLK_D:
                 c->x += 1;
                 if(c->x > MAX_MAP_SIZE - 1)
                     c->x = MAX_MAP_SIZE - 1;
-                break;*/
+                break;
             default:
                 break;
         }
+        */
         return 1;    
     }
 }
 
 int checkMenuEvents(SDL_Event e)
 {
-    if(e.type == SDL_QUIT)
+    if(e.type == SDL_EVENT_QUIT)
         return 0;
-    else if(e.type == SDL_KEYDOWN)
+    else if(e.type == SDL_EVENT_KEY_DOWN)
     {
-        switch(e.key.keysym.sym)
+        switch(e.key.key)
         {
             case SDLK_RETURN:
                 return 2; // 

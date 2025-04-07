@@ -5,7 +5,7 @@ SDL_Texture *loadImage(char *filename) {
     SDL_Texture *tex = NULL;
     SDL_Surface *img = IMG_Load(filename);
     if(!img) {
-        printf("Image failed to load: %s\n", IMG_GetError());
+        printf("Image failed to load: %s\n", SDL_GetError());
         return NULL;
     }
     tex = SDL_CreateTextureFromSurface(client.renderer, img);
@@ -27,13 +27,13 @@ void blitSprite(Sprite_t *s) {
     */
 
     if(s->scale == 0) // full screen blit
-        SDL_RenderCopy(client.renderer, s->img, &srcRect, NULL);
+        SDL_RenderTexture(client.renderer, s->img, &srcRect, NULL);
     else {
         destRect.x = s->x;
         destRect.y = s->y;
         destRect.w = s->w * s->scale;
         destRect.h = s->h * s->scale;
-        SDL_RenderCopy(client.renderer, s->img, &srcRect, &destRect);
+        SDL_RenderTexture(client.renderer, s->img, &srcRect, &destRect);
     }
 }
 
@@ -89,7 +89,7 @@ void blitTile(SDL_Texture *image, int x, int y, int w, int h, SDL_Rect destRect)
     srcRect.w = w;
     srcRect.h = h;
 
-    SDL_RenderCopy(client.renderer, image, &srcRect, &destRect);
+    SDL_RenderTexture(client.renderer, image, &srcRect, &destRect);
 }
 
 // delete later?
@@ -192,7 +192,7 @@ void printSprites() {
 void renderDrawList() {
     DrawList_t *current = client.DLhead;
     while(current != NULL) {
-        SDL_RenderCopy(client.renderer, current->img, &current->srcRect, &current->destRect);
+        SDL_RenderTexture(client.renderer, current->img, &current->srcRect, &current->destRect);
         current = current->next;
     }
 }
