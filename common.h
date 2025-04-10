@@ -17,8 +17,8 @@ typedef enum {MENU, GAME} Gamestate;
 typedef struct DrawList_t {
     int id; // might use as an identifier!
     SDL_Texture *img;
-    SDL_Rect srcRect;
-    SDL_Rect destRect;
+    SDL_FRect srcRect;
+    SDL_FRect destRect;
     struct DrawList_t *next;
 } DrawList_t;
 

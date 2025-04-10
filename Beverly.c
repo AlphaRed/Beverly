@@ -7,7 +7,7 @@
 // resources
 SDL_Texture *font;
 
-SDL_Rect fontTiles[FONT_NUM];
+SDL_FRect fontTiles[FONT_NUM];
 
 Client_t client;
 Sprite_t bg;
@@ -32,7 +32,6 @@ void checkDelay(FILE *f) {
 }
 
 int main(int argc, char *args[]) {    
-    // SDL setup
     if(initSDL()) {
         printf("initSDL failed.\n");
         return 1;
@@ -80,7 +79,7 @@ int main(int argc, char *args[]) {
     cursor.lastTick = 0;
     cursor.img = loadImage("art/cursor.png");
 
-    int quit = 1;
+    int quit = 0;
     SDL_Event e;
     int fps_counter = 0;
     int renderTicks = 0;
@@ -109,8 +108,15 @@ int main(int argc, char *args[]) {
     FILE *t = openTextFile("data/string.txt");
     loadText(t, &stringFile);
 
+    SDL_Texture* tester = loadTexture("art/test.png");
+    SDL_FRect testRect;
+    testRect.x = 0.0;
+    testRect.y = 0.0;
+    testRect.w = 76.0;
+    testRect.h = 117.0;
+
     // Game loop
-    while(quit) {
+    while(!quit) {
         client.currentTicks = SDL_GetTicks();
 
         // Input
@@ -134,15 +140,18 @@ int main(int argc, char *args[]) {
 
         // Render
         renderTicks = SDL_GetTicks();
+        SDL_RenderClear(client.renderer);
 
         if(client.gamestate == GAME) {  
             blitSprite(&bg);
             blitSprite(&bust); 
         }
         else if(client.gamestate == MENU) {
-            blitSprite(&bg); // clearing colour
+            blitSprite(&bg);
+            blitSprite(&bust);
+            SDL_RenderTexture(client.renderer, testimg, NULL, NULL);
             //drawCursor(&cursor);
-            renderDrawList();
+            //renderDrawList();
         }
         
         drawFPS(fps_counter);

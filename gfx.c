@@ -12,8 +12,17 @@ SDL_Texture *loadImage(char *filename) {
     return tex;
 }
 
+SDL_Texture* loadTexture(char* filename) {
+    SDL_Texture* returnTexture = IMG_LoadTexture(client.renderer, filename);
+    if (!returnTexture) {
+        printf("We have a problem\n");
+        return NULL;
+    }
+    return returnTexture;
+}
+
 void blitSprite(Sprite_t *s) {
-    SDL_Rect srcRect, destRect;
+    SDL_FRect srcRect, destRect;
     srcRect.x = (s->frame % s->cols) * s->w;
     srcRect.y = (s->frame / s->cols) * s->h;
     srcRect.w = s->w;
@@ -26,7 +35,7 @@ void blitSprite(Sprite_t *s) {
     printf("h: %d\n", srcRect.h);
     */
 
-    if(s->scale == 0) // full screen blit
+    if (s->scale == 0) // full screen blit
         SDL_RenderTexture(client.renderer, s->img, &srcRect, NULL);
     else {
         destRect.x = s->x;
@@ -82,8 +91,8 @@ void drawCursor(Sprite_t *s) {
 }
 
 // might not be needed anymore...to remove from drawletter and drawmap(?)
-void blitTile(SDL_Texture *image, int x, int y, int w, int h, SDL_Rect destRect) {
-    SDL_Rect srcRect;
+void blitTile(SDL_Texture *image, int x, int y, int w, int h, SDL_FRect destRect) {
+    SDL_FRect srcRect;
     srcRect.x = x;
     srcRect.y = y;
     srcRect.w = w;
@@ -98,7 +107,7 @@ void drawLetter(char c, int x, int y, int s)
     //int x = ((c - 32) % 8) * 8; // ASCII starts at char = 32, font width = 8px
     //int y = ((c - 32) / 16) * 12; // ASCII starts at char = 32, num of chars in width = 16, font height = 12px
 
-    SDL_Rect destRect;
+    SDL_FRect destRect;
     destRect.x = x;
     destRect.y = y;
     destRect.w = 8 * s;
@@ -109,7 +118,7 @@ void drawLetter(char c, int x, int y, int s)
 }
 
 // delete later?
-void setupFontTiles(SDL_Rect f[], int num)
+void setupFontTiles(SDL_FRect f[], int num)
 {
     for(int i = 0; i < num; i++)
     {
@@ -145,7 +154,7 @@ void drawFPS(int fps)
 }
 
 // add a sprite
-DrawList_t *addSprite(DrawList_t *head, int data, SDL_Texture *i, SDL_Rect sr, SDL_Rect dr) {
+DrawList_t *addSprite(DrawList_t *head, int data, SDL_Texture *i, SDL_FRect sr, SDL_FRect dr) {
     DrawList_t *new = NULL;
     new = malloc(sizeof(DrawList_t));
     if(new == NULL)
@@ -198,8 +207,8 @@ void renderDrawList() {
 }
 
 void drawCursorNew(Sprite_t *s) {
-    SDL_Rect destRect = {client.drawX, client.drawY, 8 * 2, 12 * 2};
-    SDL_Rect srcRect;
+    SDL_FRect destRect = {client.drawX, client.drawY, 8 * 2, 12 * 2};
+    SDL_FRect srcRect;
     srcRect.x = (s->frame % s->cols) * s->w;
     srcRect.y = (s->frame / s->cols) * s->h;
     srcRect.w = s->w;
@@ -221,13 +230,13 @@ int drawRow(String_t *str, Sprite_t spr) {
     //printf("Char: %c\n", c);
 
     int frame = c - 32;
-    SDL_Rect srcRect;
+    SDL_FRect srcRect;
     srcRect.x = (frame % spr.cols) * spr.w;
     srcRect.y = (frame / spr.cols) * spr.h;
     srcRect.w = spr.w;
     srcRect.h = spr.h;
 
-    SDL_Rect destRect;
+    SDL_FRect destRect;
     destRect.x = client.drawX;
     destRect.y = client.drawY;
     destRect.w = spr.w * spr.scale;

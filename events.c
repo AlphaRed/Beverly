@@ -40,18 +40,23 @@ int checkGameEvents(SDL_Event e)
 
 int checkMenuEvents(SDL_Event e)
 {
-    if(e.type == SDL_EVENT_QUIT)
+    if (e.type == SDL_EVENT_QUIT)
         return 0;
-    else if(e.type == SDL_EVENT_KEY_DOWN)
+    else if (e.type == SDL_EVENT_KEY_DOWN)
     {
-        switch(e.key.key)
+        switch (e.key.key)
         {
-            case SDLK_RETURN:
-                return 2; // 
-                break;
-            default:
-                break;
+        case SDLK_RETURN:
+            return 2;
+            break;
+        case SDLK_ESCAPE:
+            return 1;
+            break;
+        default:
+            break;
         }
-        return 1;    
+        return 0;
     }
+    else
+        return 0;
 }

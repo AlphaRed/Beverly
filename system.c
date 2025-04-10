@@ -18,6 +18,7 @@ int initRenderer() {
         printf("Renderer failed to be created: %s\n", SDL_GetError());
         return 1;
     }
+    SDL_SetRenderDrawColor(client.renderer, 0x0, 0x0, 0xFF, 0xFF);
     return 0;
 }
 
