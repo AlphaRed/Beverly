@@ -18,7 +18,7 @@ int initRenderer() {
         printf("Renderer failed to be created: %s\n", SDL_GetError());
         return 1;
     }
-    SDL_SetRenderDrawColor(client.renderer, 0x0, 0x0, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(client.renderer, 0x0, 0x0, 0x0, 0xFF);
     return 0;
 }
 
@@ -58,7 +58,7 @@ int calculateFPS() {
 }
 
 void loadResources() {
-    font = loadImage("art/font-ascii.png");
+    font = loadTexture("art/font-ascii.png");
     if(font == NULL)
         printf("Font image filed to load.\n");
 }

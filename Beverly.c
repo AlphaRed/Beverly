@@ -14,6 +14,7 @@ Sprite_t bg;
 Sprite_t bust;
 Sprite_t text;
 Sprite_t cursor;
+Sprite_t loadbar;
 
 String_t stringFile;
 
@@ -28,6 +29,22 @@ void checkDelay(FILE *f) {
         loadText(f, &stringFile);
         client.drawY += 12 * 2;
         client.drawX = 0;
+    }
+}
+
+void drawLoadbar(Sprite_t *sprite, int maxLen) {
+    float x = (float) sprite->x;
+    float y = (float) sprite->y;
+    //sprite->lastTick = client.currentTicks;
+
+    if (client.currentTicks - sprite->lastTick > 300) {
+        for (int i = 0; i <= sprite->frame; i++) {
+            blitTile(sprite, 0, x + (i * sprite->w), y, 16.0, 16.0);
+        }
+        sprite->frame = sprite->frame + 1;
+        if (sprite->frame > maxLen)
+            sprite->frame = maxLen;
+        sprite->lastTick = client.currentTicks;
     }
 }
 
@@ -49,16 +66,7 @@ int main(int argc, char *args[]) {
     bust.scale = 1;
     bust.frame = 0;
     bust.cols = 1;
-    bust.img = loadImage("art/bust.png");
-
-    bg.x = 0;
-    bg.y = 0;
-    bg.w = 32;
-    bg.h = 32;
-    bg.scale = 0;
-    bg.frame = 0;
-    bg.cols = 1;
-    bg.img = loadImage("art/bg.png");
+    bust.img = loadTexture("art/bust.png");
 
     text.x = 0;
     text.y = 0;
@@ -67,7 +75,7 @@ int main(int argc, char *args[]) {
     text.scale = 2; // go with 2x for now...
     text.frame = 0;
     text.cols = 16;
-    text.img = loadImage("art/font-ascii.png");
+    text.img = loadTexture("art/font-ascii.png");
 
     cursor.x = 0;
     cursor.y = 0;
@@ -77,7 +85,17 @@ int main(int argc, char *args[]) {
     cursor.frame = 0;
     cursor.cols = 2;
     cursor.lastTick = 0;
-    cursor.img = loadImage("art/cursor.png");
+    cursor.img = loadTexture("art/cursor.png");
+
+    loadbar.x = 50;
+    loadbar.y = 50;
+    loadbar.w = 16;
+    loadbar.h = 16;
+    loadbar.scale = 1;
+    loadbar.frame = 0;
+    loadbar.cols = 4;
+    loadbar.lastTick = 0;
+    loadbar.img = loadTexture("art/loadbar.png");
 
     int quit = 0;
     SDL_Event e;
@@ -95,7 +113,7 @@ int main(int argc, char *args[]) {
     sRect.y = 0;
     sRect.w = 76;
     sRect.h = 117;
-    SDL_Texture * testimg = loadImage("art/bust.png");
+    SDL_Texture * testimg = loadTexture("art/bust.png");
     dRect.x = 50;
     dRect.y = 50;
     dRect.w = 76;
@@ -107,13 +125,6 @@ int main(int argc, char *args[]) {
     //drawCursorNew(&cursor);
     FILE *t = openTextFile("data/string.txt");
     loadText(t, &stringFile);
-
-    SDL_Texture* tester = loadTexture("art/test.png");
-    SDL_FRect testRect;
-    testRect.x = 0.0;
-    testRect.y = 0.0;
-    testRect.w = 76.0;
-    testRect.h = 117.0;
 
     // Game loop
     while(!quit) {
@@ -143,13 +154,12 @@ int main(int argc, char *args[]) {
         SDL_RenderClear(client.renderer);
 
         if(client.gamestate == GAME) {  
-            blitSprite(&bg);
-            blitSprite(&bust); 
+            //blitSprite(&bust);
         }
         else if(client.gamestate == MENU) {
-            blitSprite(&bg);
             blitSprite(&bust);
-            SDL_RenderTexture(client.renderer, testimg, NULL, NULL);
+            drawLoadbar(&loadbar, 20);
+            //blitSprite(&loadbar);
             //drawCursor(&cursor);
             //renderDrawList();
         }

@@ -1,25 +1,32 @@
 #include "common.h"
 #include "gfx.h"
 
-SDL_Texture *loadImage(char *filename) {
-    SDL_Texture *tex = NULL;
-    SDL_Surface *img = IMG_Load(filename);
-    if(!img) {
-        printf("Image failed to load: %s\n", SDL_GetError());
+SDL_Texture *loadTexture(char *filename) {
+    SDL_Texture *retTex = IMG_LoadTexture(client.renderer, filename);
+    if (!retTex) {
+        printf("Texture file failed to load\n");
         return NULL;
     }
-    tex = SDL_CreateTextureFromSurface(client.renderer, img);
-    return tex;
+    return retTex;
 }
 
-SDL_Texture* loadTexture(char* filename) {
-    SDL_Texture* returnTexture = IMG_LoadTexture(client.renderer, filename);
-    if (!returnTexture) {
-        printf("We have a problem\n");
-        return NULL;
-    }
-    return returnTexture;
+void blitTile(Sprite_t *sprite, int tileNum, float x, float y, float w, float h) {
+    SDL_FRect tile;
+    tile.x = tileNum * sprite->w;
+    tile.y = 0.0; // for now, to fix for future Isaac, I forget the math on this one...
+    tile.w = sprite->w;
+    tile.h = sprite->h;
+    
+    SDL_FRect dest;
+    dest.x = x;
+    dest.y = y;
+    dest.w = w;
+    dest.h = h;
+
+    SDL_RenderTexture(client.renderer, sprite->img, &tile, &dest);
 }
+
+// EVERYTHING BELOW THIS COMMENT IS UNREVIEWED AND NEEDS TO BE REWRITTEN OR DELETED...FOR FUTURE ISAAC
 
 void blitSprite(Sprite_t *s) {
     SDL_FRect srcRect, destRect;
@@ -90,17 +97,6 @@ void drawCursor(Sprite_t *s) {
     }
 }
 
-// might not be needed anymore...to remove from drawletter and drawmap(?)
-void blitTile(SDL_Texture *image, int x, int y, int w, int h, SDL_FRect destRect) {
-    SDL_FRect srcRect;
-    srcRect.x = x;
-    srcRect.y = y;
-    srcRect.w = w;
-    srcRect.h = h;
-
-    SDL_RenderTexture(client.renderer, image, &srcRect, &destRect);
-}
-
 // delete later?
 void drawLetter(char c, int x, int y, int s)
 {
@@ -114,7 +110,8 @@ void drawLetter(char c, int x, int y, int s)
     destRect.h = 12 * s;
     
     int fontIndex = c - 32; // ASCII starts at character #32
-    blitTile(font, fontTiles[fontIndex].x, fontTiles[fontIndex].y, fontTiles[fontIndex].w, fontTiles[fontIndex].h, destRect);
+    // to fix later as I changed blitTile function!
+    //blitTile(font, fontTiles[fontIndex].x, fontTiles[fontIndex].y, fontTiles[fontIndex].w, fontTiles[fontIndex].h);
 }
 
 // delete later?

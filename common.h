@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define SCREEN_WIDTH    1280 // keep it 16:9
-#define SCREEN_HEIGHT   720
+#define SCREEN_WIDTH    1920
+#define SCREEN_HEIGHT   1080
 #define FONT_NUM 200
 #define MAX_FPS 60
 #define MAX_CHARS 80 // equals 1280 / 8px / 2 scale
