@@ -10,12 +10,13 @@ SDL_Texture *loadTexture(char *filename) {
     return retTex;
 }
 
-void blitTile(Sprite_t *sprite, int tileNum, float x, float y, float w, float h) {
+// FOR BLITTING SINGLE TILES FROM A TILE SHEET
+void blitTile(Sprite_t *spr, int tileNum, float x, float y, float w, float h) {
     SDL_FRect tile;
-    tile.x = tileNum * sprite->w;
+    tile.x = tileNum * spr->w;
     tile.y = 0.0; // for now, to fix for future Isaac, I forget the math on this one...
-    tile.w = sprite->w;
-    tile.h = sprite->h;
+    tile.w = TILE_WIDTH;
+    tile.h = TILE_HEIGHT;
     
     SDL_FRect dest;
     dest.x = x;
@@ -23,36 +24,21 @@ void blitTile(Sprite_t *sprite, int tileNum, float x, float y, float w, float h)
     dest.w = w;
     dest.h = h;
 
-    SDL_RenderTexture(client.renderer, sprite->img, &tile, &dest);
+    SDL_RenderTexture(client.renderer, spr->img, &tile, &dest);
+}
+
+// FOR BLITTING FULL SPRITES/IMAGES
+void blitSprite(Sprite_t* spr) {
+    SDL_FRect dest;
+
+    dest.x = spr->x;
+    dest.y = spr->y;
+    dest.w = spr->w;
+    dest.h = spr->h;
+    SDL_RenderTexture(client.renderer, spr->img, NULL, &dest);
 }
 
 // EVERYTHING BELOW THIS COMMENT IS UNREVIEWED AND NEEDS TO BE REWRITTEN OR DELETED...FOR FUTURE ISAAC
-
-void blitSprite(Sprite_t *s) {
-    SDL_FRect srcRect, destRect;
-    srcRect.x = (s->frame % s->cols) * s->w;
-    srcRect.y = (s->frame / s->cols) * s->h;
-    srcRect.w = s->w;
-    srcRect.h = s->h;
-
-    /* in case of fire
-    printf("x: %d\n", srcRect.x);
-    printf("y: %d\n", srcRect.y);
-    printf("w: %d\n", srcRect.w);
-    printf("h: %d\n", srcRect.h);
-    */
-
-    if (s->scale == 0) // full screen blit
-        SDL_RenderTexture(client.renderer, s->img, &srcRect, NULL);
-    else {
-        destRect.x = s->x;
-        destRect.y = s->y;
-        destRect.w = s->w * s->scale;
-        destRect.h = s->h * s->scale;
-        SDL_RenderTexture(client.renderer, s->img, &srcRect, &destRect);
-    }
-}
-
 void drawChar(Sprite_t *s, char c, int x, int y) { // rename later? really small function
     s->frame = c - 32;
     s->x = x;

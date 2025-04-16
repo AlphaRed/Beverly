@@ -15,6 +15,7 @@ Sprite_t bust;
 Sprite_t text;
 Sprite_t cursor;
 Sprite_t loadbar;
+Sprite_t windowTest;
 
 String_t stringFile;
 
@@ -46,6 +47,10 @@ void drawLoadbar(Sprite_t *sprite, int maxLen) {
             sprite->frame = maxLen;
         sprite->lastTick = client.currentTicks;
     }
+}
+
+void drawWindow(int winW, int winH, Sprite_t *spr) {
+
 }
 
 int main(int argc, char *args[]) {    
@@ -96,6 +101,16 @@ int main(int argc, char *args[]) {
     loadbar.cols = 4;
     loadbar.lastTick = 0;
     loadbar.img = loadTexture("art/loadbar.png");
+
+    windowTest.x = 50;
+    windowTest.y = 50;
+    windowTest.w = 16;
+    windowTest.h = 16;
+    windowTest.scale = 1;
+    windowTest.frame = 0;
+    windowTest.cols = 4;
+    windowTest.lastTick = 0;
+    windowTest.img = loadTexture("art/window.png");
 
     int quit = 0;
     SDL_Event e;
@@ -158,7 +173,8 @@ int main(int argc, char *args[]) {
         }
         else if(client.gamestate == MENU) {
             blitSprite(&bust);
-            drawLoadbar(&loadbar, 20);
+            blitTile(&windowTest, 0, 50, 50, TILE_WIDTH, TILE_HEIGHT);
+            //drawLoadbar(&loadbar, 20);
             //blitSprite(&loadbar);
             //drawCursor(&cursor);
             //renderDrawList();

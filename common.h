@@ -8,6 +8,8 @@
 
 #define SCREEN_WIDTH    1920
 #define SCREEN_HEIGHT   1080
+#define TILE_WIDTH      16
+#define TILE_HEIGHT     16
 #define FONT_NUM 200
 #define MAX_FPS 60
 #define MAX_CHARS 80 // equals 1280 / 8px / 2 scale
