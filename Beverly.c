@@ -49,8 +49,29 @@ void drawLoadbar(Sprite_t *sprite, int maxLen) {
     }
 }
 
-void drawWindow(int winW, int winH, Sprite_t *spr) {
+void drawWindow(int numTileW, int numTileH, Sprite_t *spr) {
+    int x = 150; // to move this somewhere
+    int y = 150; // to move this somewhere
 
+    // top bar
+    int winW = numTileW - 1; // need one less tile for the X button
+    for (int i = 0; i < winW; i++) {
+        blitTile(spr, 0, x + (i * TILE_WIDTH), y, TILE_WIDTH, TILE_HEIGHT);
+    }
+    blitTile(spr, 1, x + (winW  * TILE_WIDTH), y, TILE_WIDTH, TILE_HEIGHT);
+
+    // side bars
+    for (int i = 0; i < numTileH; i++) {
+        blitTile(spr, 3, x, y + TILE_HEIGHT + (i * TILE_HEIGHT), TILE_WIDTH, TILE_HEIGHT);
+        blitTile(spr, 2, x + (winW * TILE_WIDTH), y + TILE_HEIGHT + (i * TILE_HEIGHT), TILE_WIDTH, TILE_HEIGHT);
+    }
+
+    // bottom bar
+    for (int i = 0; i < winW; i++) {
+        blitTile(spr, 4, x + (i * TILE_WIDTH), y + (numTileH * TILE_HEIGHT), TILE_WIDTH, TILE_HEIGHT);
+    }
+    blitTile(spr, 6, x, y + (numTileH * TILE_HEIGHT), TILE_WIDTH, TILE_HEIGHT);
+    blitTile(spr, 5, x + (winW  * TILE_WIDTH), y + (numTileH * TILE_HEIGHT), TILE_WIDTH, TILE_HEIGHT);
 }
 
 int main(int argc, char *args[]) {    
@@ -64,6 +85,7 @@ int main(int argc, char *args[]) {
     setupFontTiles(fontTiles, FONT_NUM); // move this?
     
     // will need to move these...eventually!
+    // make a load "scenes" from text file? Sounds good!
     bust.x = 50;
     bust.y = 100;
     bust.w = 76;
@@ -174,6 +196,7 @@ int main(int argc, char *args[]) {
         else if(client.gamestate == MENU) {
             blitSprite(&bust);
             blitTile(&windowTest, 0, 50, 50, TILE_WIDTH, TILE_HEIGHT);
+            drawWindow(10, 10, &windowTest);
             //drawLoadbar(&loadbar, 20);
             //blitSprite(&loadbar);
             //drawCursor(&cursor);

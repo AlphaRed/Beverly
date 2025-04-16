@@ -21,8 +21,8 @@ void blitTile(Sprite_t *spr, int tileNum, float x, float y, float w, float h) {
     SDL_FRect dest;
     dest.x = x;
     dest.y = y;
-    dest.w = w;
-    dest.h = h;
+    dest.w = w; // remove width and height? Will these even be used?
+    dest.h = h; // remove width and height? Will these even be used?
 
     SDL_RenderTexture(client.renderer, spr->img, &tile, &dest);
 }
