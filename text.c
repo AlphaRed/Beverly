@@ -3,14 +3,14 @@
 #include "gfx.h"
 
 FILE *openTextFile(char *filename) {
-    FILE *f = fopen(filename, "r");
+    FILE *file = fopen(filename, "r");
 
-    if(f == NULL) {
+    if(file == NULL) {
         printf("Failed to load text file, %s\n", filename);
         return NULL;
     }
     else
-        return f;
+        return file;
 }
 
 void closeTextFile(FILE *f) {

@@ -32,7 +32,7 @@ typedef struct Client_t { // For all things client!
     int prevTicks;
     int drawX;
     int drawY;
-    DrawList_t *DLhead;
+    DrawList_t *DLhead; // basically the scene?
     char stringBuffer[MAX_CHARS]; // for now?
 } Client_t;
 

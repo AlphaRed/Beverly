@@ -13,7 +13,7 @@ SDL_Texture *loadTexture(char *filename) {
 // FOR BLITTING SINGLE TILES FROM A TILE SHEET
 void blitTile(Sprite_t *spr, int tileNum, float x, float y, float w, float h) {
     SDL_FRect tile;
-    tile.x = tileNum * spr->w;
+    tile.x = tileNum * TILE_WIDTH;
     tile.y = 0.0; // for now, to fix for future Isaac, I forget the math on this one...
     tile.w = TILE_WIDTH;
     tile.h = TILE_HEIGHT;
@@ -21,8 +21,8 @@ void blitTile(Sprite_t *spr, int tileNum, float x, float y, float w, float h) {
     SDL_FRect dest;
     dest.x = x;
     dest.y = y;
-    dest.w = w; // remove width and height? Will these even be used?
-    dest.h = h; // remove width and height? Will these even be used?
+    dest.w = TILE_WIDTH; // remove width and height? Will these even be used?
+    dest.h = TILE_HEIGHT; // remove width and height? Will these even be used?
 
     SDL_RenderTexture(client.renderer, spr->img, &tile, &dest);
 }
@@ -36,6 +36,45 @@ void blitSprite(Sprite_t* spr) {
     dest.w = spr->w;
     dest.h = spr->h;
     SDL_RenderTexture(client.renderer, spr->img, NULL, &dest);
+}
+
+// FOR DRAWING WINDOWS
+void drawWindow(Sprite_t* spr) {
+    int x = spr->x;
+    int y = spr->y;
+
+    // top bar
+    for (int i = 0; i < spr->w; i++) {
+        if (i == 0)
+            blitTile(spr, 0, x, y, TILE_WIDTH, TILE_HEIGHT);
+        else if(i == spr->w - 1)
+            blitTile(spr, 2, x, y, TILE_WIDTH, TILE_HEIGHT);
+        else
+            blitTile(spr, 1, x, y, TILE_WIDTH, TILE_HEIGHT);
+        x += TILE_WIDTH;
+    }
+
+    // side bars
+    x = spr->x; // reset x and set x to next line
+    y += TILE_HEIGHT;
+    for (int i = 1; i < spr->h; i++) {
+        blitTile(spr, 4, x, y, TILE_WIDTH, TILE_HEIGHT);
+        blitTile(spr, 3, x + (spr->w - 1) * TILE_WIDTH, y, TILE_WIDTH, TILE_HEIGHT);
+        y += TILE_HEIGHT;
+    }
+
+    // bottom bar
+    x = spr->x; // reset x and move back up one
+    y -= TILE_HEIGHT;
+    for (int i = 0; i < spr->w; i++) {
+        if(i == 0)
+            blitTile(spr, 7, x, y, TILE_WIDTH, TILE_HEIGHT);
+        else if(i == spr->w - 1)
+            blitTile(spr, 6, x, y, TILE_WIDTH, TILE_HEIGHT);
+        else
+            blitTile(spr, 5, x, y, TILE_WIDTH, TILE_HEIGHT);
+        x += TILE_WIDTH;
+    }
 }
 
 // EVERYTHING BELOW THIS COMMENT IS UNREVIEWED AND NEEDS TO BE REWRITTEN OR DELETED...FOR FUTURE ISAAC

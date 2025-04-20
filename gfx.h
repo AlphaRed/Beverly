@@ -11,6 +11,7 @@ extern SDL_FRect fontTiles[FONT_NUM];
 SDL_Texture *loadTexture(char* filename);
 void blitTile(Sprite_t *spr, int tileNum, float x, float y, float w, float h);
 void blitSprite(Sprite_t *spr);
+void drawWindow(Sprite_t* spr);
 // To review the below functions...may not need them all
 void drawChar(Sprite_t *s, char c, int x, int y);
 void drawLine(String_t *str, Sprite_t *s);

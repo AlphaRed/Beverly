@@ -49,29 +49,8 @@ void drawLoadbar(Sprite_t *sprite, int maxLen) {
     }
 }
 
-void drawWindow(int numTileW, int numTileH, Sprite_t *spr) {
-    int x = 150; // to move this somewhere
-    int y = 150; // to move this somewhere
+void loadScene(FILE *sceneFile) {
 
-    // top bar
-    int winW = numTileW - 1; // need one less tile for the X button
-    for (int i = 0; i < winW; i++) {
-        blitTile(spr, 0, x + (i * TILE_WIDTH), y, TILE_WIDTH, TILE_HEIGHT);
-    }
-    blitTile(spr, 1, x + (winW  * TILE_WIDTH), y, TILE_WIDTH, TILE_HEIGHT);
-
-    // side bars
-    for (int i = 0; i < numTileH; i++) {
-        blitTile(spr, 3, x, y + TILE_HEIGHT + (i * TILE_HEIGHT), TILE_WIDTH, TILE_HEIGHT);
-        blitTile(spr, 2, x + (winW * TILE_WIDTH), y + TILE_HEIGHT + (i * TILE_HEIGHT), TILE_WIDTH, TILE_HEIGHT);
-    }
-
-    // bottom bar
-    for (int i = 0; i < winW; i++) {
-        blitTile(spr, 4, x + (i * TILE_WIDTH), y + (numTileH * TILE_HEIGHT), TILE_WIDTH, TILE_HEIGHT);
-    }
-    blitTile(spr, 6, x, y + (numTileH * TILE_HEIGHT), TILE_WIDTH, TILE_HEIGHT);
-    blitTile(spr, 5, x + (winW  * TILE_WIDTH), y + (numTileH * TILE_HEIGHT), TILE_WIDTH, TILE_HEIGHT);
 }
 
 int main(int argc, char *args[]) {    
@@ -124,13 +103,13 @@ int main(int argc, char *args[]) {
     loadbar.lastTick = 0;
     loadbar.img = loadTexture("art/loadbar.png");
 
-    windowTest.x = 50;
-    windowTest.y = 50;
-    windowTest.w = 16;
-    windowTest.h = 16;
+    windowTest.x = 150;
+    windowTest.y = 150;
+    windowTest.w = 10;
+    windowTest.h = 10;
     windowTest.scale = 1;
     windowTest.frame = 0;
-    windowTest.cols = 4;
+    windowTest.cols = 8;
     windowTest.lastTick = 0;
     windowTest.img = loadTexture("art/window.png");
 
@@ -162,6 +141,10 @@ int main(int argc, char *args[]) {
     //drawCursorNew(&cursor);
     FILE *t = openTextFile("data/string.txt");
     loadText(t, &stringFile);
+
+    // Opening scenes
+    FILE* scene = openTextFile("data/scene.txt");
+    loadScene(scene);
 
     // Game loop
     while(!quit) {
@@ -196,7 +179,7 @@ int main(int argc, char *args[]) {
         else if(client.gamestate == MENU) {
             blitSprite(&bust);
             blitTile(&windowTest, 0, 50, 50, TILE_WIDTH, TILE_HEIGHT);
-            drawWindow(10, 10, &windowTest);
+            drawWindow(&windowTest);
             //drawLoadbar(&loadbar, 20);
             //blitSprite(&loadbar);
             //drawCursor(&cursor);
