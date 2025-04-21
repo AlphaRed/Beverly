@@ -77,6 +77,32 @@ void drawWindow(Sprite_t* spr) {
     }
 }
 
+// ADD SPRITE TO DRAWLIST
+DrawList_t* addSprite(DrawList_t* head, int data, Sprite_t *sprite) {
+    DrawList_t* new = NULL;
+    new = malloc(sizeof(DrawList_t));
+    if (new == NULL)
+        return NULL;
+    new->id = data;
+    new->spr = sprite;
+    new->next = head;
+    printf("Added a sprite-> %d\n", new->id);
+    return new;
+}
+
+// RENDERS ALL SPRITES IN THE DRAWLIST
+void renderDrawList() {
+    DrawList_t* current = client.DLhead;
+    while (current != NULL) {
+        //SDL_RenderTexture(client.renderer, current->img, &current->srcRect, &current->destRect);
+        if (current->spr->window == 1)
+            drawWindow(current->spr);
+        else
+            blitSprite(current->spr);
+        current = current->next;
+    }
+}
+
 // EVERYTHING BELOW THIS COMMENT IS UNREVIEWED AND NEEDS TO BE REWRITTEN OR DELETED...FOR FUTURE ISAAC
 void drawChar(Sprite_t *s, char c, int x, int y) { // rename later? really small function
     s->frame = c - 32;
@@ -175,21 +201,6 @@ void drawFPS(int fps)
     }   
 }
 
-// add a sprite
-DrawList_t *addSprite(DrawList_t *head, int data, SDL_Texture *i, SDL_FRect sr, SDL_FRect dr) {
-    DrawList_t *new = NULL;
-    new = malloc(sizeof(DrawList_t));
-    if(new == NULL)
-        return NULL;
-    new->id = data;
-    new->img = i;
-    new->srcRect = sr;
-    new->destRect = dr;
-    new->next = head;
-    printf("Added a sprite-> %d\n", new->id);
-    return new;
-}
-
 // remove a sprite...untested but should work!
 int removeSprite(DrawList_t *head, int data) {
     DrawList_t *current = head;
@@ -220,14 +231,6 @@ void printSprites() {
     printf("\n");
 }
 
-void renderDrawList() {
-    DrawList_t *current = client.DLhead;
-    while(current != NULL) {
-        SDL_RenderTexture(client.renderer, current->img, &current->srcRect, &current->destRect);
-        current = current->next;
-    }
-}
-
 void drawCursorNew(Sprite_t *s) {
     SDL_FRect destRect = {client.drawX, client.drawY, 8 * 2, 12 * 2};
     SDL_FRect srcRect;
@@ -236,7 +239,7 @@ void drawCursorNew(Sprite_t *s) {
     srcRect.w = s->w;
     srcRect.h = s->h;
     
-    client.DLhead = addSprite(client.DLhead, 3, s->img, srcRect, destRect);
+    client.DLhead = addSprite(client.DLhead, 3, s);
     int deltaTicks = client.currentTicks - s->lastTick;
     if(deltaTicks > 400) { // delay is hardcoded...s/b slower than draw
         if(s->frame >= 1)
@@ -265,7 +268,7 @@ int drawRow(String_t *str, Sprite_t spr) {
     destRect.h = spr.h * spr.scale;
 
     if(str->index <= str->len) {
-        client.DLhead = addSprite(client.DLhead, 3, spr.img, srcRect, destRect);
+        client.DLhead = addSprite(client.DLhead, 3, &spr);
         str->index++;
         client.drawX += 8 * 2;
     }

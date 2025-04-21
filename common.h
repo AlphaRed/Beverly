@@ -17,10 +17,8 @@
 typedef enum {MENU, GAME} Gamestate;
 
 typedef struct DrawList_t {
-    int id; // might use as an identifier!
-    SDL_Texture *img;
-    SDL_FRect srcRect;
-    SDL_FRect destRect;
+    int id; // might use as an identifier?
+    struct Sprite_t *spr;
     struct DrawList_t *next;
 } DrawList_t;
 
@@ -41,10 +39,11 @@ typedef struct Sprite_t { // add to it as you go...
     int y;
     int w;
     int h;
-    int scale;
-    int frame;
-    int cols;
-    int lastTick; // used only for cursor...so far...
+    int scale; // do I need?
+    int frame; // do I need?
+    int cols; // do I need?
+    int lastTick; // used only for cursor...so far...do I need?
+    int window; // for checking if sprite is a sprite
     SDL_Texture *img;
 } Sprite_t;
 

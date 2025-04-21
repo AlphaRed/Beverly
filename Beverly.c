@@ -33,6 +33,7 @@ void checkDelay(FILE *f) {
     }
 }
 
+// to be reworked soon...when I get to animations again...
 void drawLoadbar(Sprite_t *sprite, int maxLen) {
     float x = (float) sprite->x;
     float y = (float) sprite->y;
@@ -50,7 +51,7 @@ void drawLoadbar(Sprite_t *sprite, int maxLen) {
 }
 
 void loadScene(FILE *sceneFile) {
-
+    //fgets();
 }
 
 int main(int argc, char *args[]) {    
@@ -72,6 +73,7 @@ int main(int argc, char *args[]) {
     bust.scale = 1;
     bust.frame = 0;
     bust.cols = 1;
+    bust.window = 0;
     bust.img = loadTexture("art/bust.png");
 
     text.x = 0;
@@ -111,6 +113,7 @@ int main(int argc, char *args[]) {
     windowTest.frame = 0;
     windowTest.cols = 8;
     windowTest.lastTick = 0;
+    windowTest.window = 1;
     windowTest.img = loadTexture("art/window.png");
 
     int quit = 0;
@@ -124,17 +127,8 @@ int main(int argc, char *args[]) {
     client.DLhead = NULL;
 
     // drawlist testing
-    SDL_Rect sRect, dRect;
-    sRect.x = 0;
-    sRect.y = 0;
-    sRect.w = 76;
-    sRect.h = 117;
-    SDL_Texture * testimg = loadTexture("art/bust.png");
-    dRect.x = 50;
-    dRect.y = 50;
-    dRect.w = 76;
-    dRect.h = 117;
-    client.DLhead = addSprite(client.DLhead, 2, testimg, sRect, dRect);
+    client.DLhead = addSprite(client.DLhead, 2, &bust);
+    client.DLhead = addSprite(client.DLhead, 3, &windowTest);
 
     printSprites();
 
@@ -177,13 +171,13 @@ int main(int argc, char *args[]) {
             //blitSprite(&bust);
         }
         else if(client.gamestate == MENU) {
-            blitSprite(&bust);
-            blitTile(&windowTest, 0, 50, 50, TILE_WIDTH, TILE_HEIGHT);
-            drawWindow(&windowTest);
+            //blitSprite(&bust);
+            //blitTile(&windowTest, 0, 50, 50, TILE_WIDTH, TILE_HEIGHT);
+            //drawWindow(&windowTest);
             //drawLoadbar(&loadbar, 20);
             //blitSprite(&loadbar);
             //drawCursor(&cursor);
-            //renderDrawList();
+            renderDrawList();
         }
         
         drawFPS(fps_counter);
