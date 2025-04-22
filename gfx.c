@@ -1,6 +1,7 @@
 #include "common.h"
 #include "gfx.h"
 
+// FOR LOADING TEXTURE
 SDL_Texture *loadTexture(char *filename) {
     SDL_Texture *retTex = IMG_LoadTexture(client.renderer, filename);
     if (!retTex) {

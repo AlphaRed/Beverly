@@ -1,4 +1,4 @@
-#include"common.h"
+#include "common.h"
 #include "system.h"
 #include "gfx.h"
 
@@ -55,10 +55,4 @@ int calculateFPS() {
         fps = 1000 / deltaTicks;
     }
     return fps;
-}
-
-void loadResources() {
-    font = loadTexture("art/font-ascii.png");
-    if(font == NULL)
-        printf("Font image filed to load.\n");
 }

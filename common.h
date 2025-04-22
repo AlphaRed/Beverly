@@ -10,6 +10,8 @@
 #define SCREEN_HEIGHT   1080
 #define TILE_WIDTH      16
 #define TILE_HEIGHT     16
+#define MAX_SCENES      2 // for now
+#define MAX_SPRITES     3 // for now
 #define FONT_NUM 200
 #define MAX_FPS 60
 #define MAX_CHARS 80 // equals 1280 / 8px / 2 scale
@@ -54,5 +56,8 @@ typedef struct String_t {
     int index;
     int lastTick;
 } String_t;
+
+void loadResources();
+void loadScene(int sceneNum);
 
 #endif

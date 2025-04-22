@@ -10,12 +10,11 @@ SDL_Texture *font;
 SDL_FRect fontTiles[FONT_NUM];
 
 Client_t client;
-Sprite_t bg;
-Sprite_t bust;
+Sprite_t sceneResources[MAX_SCENES][MAX_SPRITES];
+// prob delete below?
 Sprite_t text;
 Sprite_t cursor;
 Sprite_t loadbar;
-Sprite_t windowTest;
 
 String_t stringFile;
 
@@ -50,32 +49,13 @@ void drawLoadbar(Sprite_t *sprite, int maxLen) {
     }
 }
 
-void loadScene(FILE *sceneFile) {
-    //fgets();
-}
-
 int main(int argc, char *args[]) {    
     if(initSDL()) {
         printf("initSDL failed.\n");
         return 1;
     }
-
-    // Load in images and tiles
-    loadResources();
-    setupFontTiles(fontTiles, FONT_NUM); // move this?
     
     // will need to move these...eventually!
-    // make a load "scenes" from text file? Sounds good!
-    bust.x = 50;
-    bust.y = 100;
-    bust.w = 76;
-    bust.h = 117;
-    bust.scale = 1;
-    bust.frame = 0;
-    bust.cols = 1;
-    bust.window = 0;
-    bust.img = loadTexture("art/bust.png");
-
     text.x = 0;
     text.y = 0;
     text.w = 8;
@@ -95,27 +75,6 @@ int main(int argc, char *args[]) {
     cursor.lastTick = 0;
     cursor.img = loadTexture("art/cursor.png");
 
-    loadbar.x = 50;
-    loadbar.y = 50;
-    loadbar.w = 16;
-    loadbar.h = 16;
-    loadbar.scale = 1;
-    loadbar.frame = 0;
-    loadbar.cols = 4;
-    loadbar.lastTick = 0;
-    loadbar.img = loadTexture("art/loadbar.png");
-
-    windowTest.x = 150;
-    windowTest.y = 150;
-    windowTest.w = 10;
-    windowTest.h = 10;
-    windowTest.scale = 1;
-    windowTest.frame = 0;
-    windowTest.cols = 8;
-    windowTest.lastTick = 0;
-    windowTest.window = 1;
-    windowTest.img = loadTexture("art/window.png");
-
     int quit = 0;
     SDL_Event e;
     int fps_counter = 0;
@@ -126,19 +85,16 @@ int main(int argc, char *args[]) {
     client.drawY = 0;
     client.DLhead = NULL;
 
-    // drawlist testing
-    client.DLhead = addSprite(client.DLhead, 2, &bust);
-    client.DLhead = addSprite(client.DLhead, 3, &windowTest);
+    // Load in images and tiles
+    loadResources();
+    loadScene(0);
+    setupFontTiles(fontTiles, FONT_NUM); // move this?
 
     printSprites();
 
     //drawCursorNew(&cursor);
     FILE *t = openTextFile("data/string.txt");
     loadText(t, &stringFile);
-
-    // Opening scenes
-    FILE* scene = openTextFile("data/scene.txt");
-    loadScene(scene);
 
     // Game loop
     while(!quit) {
@@ -171,12 +127,6 @@ int main(int argc, char *args[]) {
             //blitSprite(&bust);
         }
         else if(client.gamestate == MENU) {
-            //blitSprite(&bust);
-            //blitTile(&windowTest, 0, 50, 50, TILE_WIDTH, TILE_HEIGHT);
-            //drawWindow(&windowTest);
-            //drawLoadbar(&loadbar, 20);
-            //blitSprite(&loadbar);
-            //drawCursor(&cursor);
             renderDrawList();
         }
         

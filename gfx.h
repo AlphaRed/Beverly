@@ -7,6 +7,7 @@
 extern Client_t client;
 extern SDL_Texture *font;
 extern SDL_FRect fontTiles[FONT_NUM];
+extern Sprite_t sceneResources[MAX_SCENES][MAX_SPRITES];
 
 SDL_Texture *loadTexture(char* filename);
 void blitTile(Sprite_t *spr, int tileNum, float x, float y, float w, float h);
