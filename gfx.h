@@ -13,6 +13,7 @@ SDL_Texture *loadTexture(char* filename);
 void blitTile(Sprite_t *spr, int tileNum, float x, float y, float w, float h);
 void blitSprite(Sprite_t *spr);
 void drawWindow(Sprite_t* spr);
+void drawText(Sprite_t* spr);
 DrawList_t* addSprite(DrawList_t* head, int data, Sprite_t* sprite);
 void renderDrawList();
 // To review the below functions...may not need them all

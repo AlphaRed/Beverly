@@ -1,5 +1,6 @@
 #include "common.h"
 #include "gfx.h"
+#include "text.h"
 
 extern SDL_Texture *font;
 extern Client_t client;
@@ -18,7 +19,7 @@ void loadResources() {
     sceneResources[0][0].scale = 1;
     sceneResources[0][0].frame = 0;
     sceneResources[0][0].cols = 1;
-    sceneResources[0][0].window = 0;
+    sceneResources[0][0].type = SPRITE;
     sceneResources[0][0].img = loadTexture("art/bust.png");
 
     sceneResources[0][1].x = 150;
@@ -28,7 +29,7 @@ void loadResources() {
     sceneResources[0][1].scale = 1;
     sceneResources[0][1].frame = 0;
     sceneResources[0][1].cols = 1;
-    sceneResources[0][1].window = 0;
+    sceneResources[0][1].type = SPRITE;
     sceneResources[0][1].img = loadTexture("art/bust.png");
 
     sceneResources[0][2].x = 50;
@@ -38,8 +39,21 @@ void loadResources() {
     sceneResources[0][2].scale = 1;
     sceneResources[0][2].frame = 0;
     sceneResources[0][2].cols = 1;
-    sceneResources[0][2].window = 1;
+    sceneResources[0][2].type = WINDOW;
     sceneResources[0][2].img = loadTexture("art/window.png");
+
+    sceneResources[0][3].x = 0;
+    sceneResources[0][3].y = 0;
+    sceneResources[0][3].w = 0;
+    sceneResources[0][3].h = 0;
+    sceneResources[0][3].scale = 1;
+    sceneResources[0][3].frame = 0;
+    sceneResources[0][3].cols = 1;
+    sceneResources[0][3].type = TEXT;
+    sceneResources[0][3].img = loadTexture("art/font-ascii.png");
+    strcpy_s(sceneResources[0][3].string, sizeof(sceneResources[0][3].string), "Hello Otacon.");
+    sceneResources[0][3].len = 14;
+
 }
 
 // FOR LOADING SCENES INTO DRAWLIST

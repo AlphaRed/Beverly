@@ -92,6 +92,10 @@ int main(int argc, char *args[]) {
 
     printSprites();
 
+    for (int i = 0; i < sceneResources[0][3].len; i++) {
+        printf("%c\n", sceneResources[0][3].string[i]);
+    }
+
     //drawCursorNew(&cursor);
     FILE *t = openTextFile("data/string.txt");
     loadText(t, &stringFile);

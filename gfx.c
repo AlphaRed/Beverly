@@ -14,16 +14,16 @@ SDL_Texture *loadTexture(char *filename) {
 // FOR BLITTING SINGLE TILES FROM A TILE SHEET
 void blitTile(Sprite_t *spr, int tileNum, float x, float y, float w, float h) {
     SDL_FRect tile;
-    tile.x = tileNum * TILE_WIDTH;
-    tile.y = 0.0; // for now, to fix for future Isaac, I forget the math on this one...
-    tile.w = TILE_WIDTH;
-    tile.h = TILE_HEIGHT;
+    tile.x = (tileNum % TILE_COLUMNS) * w;
+    tile.y = (tileNum / TILE_COLUMNS) * h;
+    tile.w = w;
+    tile.h = h;
     
     SDL_FRect dest;
     dest.x = x;
     dest.y = y;
-    dest.w = TILE_WIDTH; // remove width and height? Will these even be used?
-    dest.h = TILE_HEIGHT; // remove width and height? Will these even be used?
+    dest.w = w;
+    dest.h = h;
 
     SDL_RenderTexture(client.renderer, spr->img, &tile, &dest);
 }
@@ -78,6 +78,18 @@ void drawWindow(Sprite_t* spr) {
     }
 }
 
+// FOR DRAWING TEXT
+void drawText(Sprite_t* spr) {
+    int x = spr->x;
+    int y = spr->y;
+
+    for (int i = 0; i < spr->len; i++) {
+        char c = spr->string[i];
+        blitTile(spr, c - 32, x, y, FONT_WIDTH, FONT_HEIGHT);
+        x += FONT_WIDTH;
+    }
+}
+
 // ADD SPRITE TO DRAWLIST
 DrawList_t* addSprite(DrawList_t* head, int data, Sprite_t *sprite) {
     DrawList_t* new = NULL;
@@ -91,13 +103,14 @@ DrawList_t* addSprite(DrawList_t* head, int data, Sprite_t *sprite) {
     return new;
 }
 
-// RENDERS ALL SPRITES IN THE DRAWLIST
+// RENDERS THE DRAWLIST
 void renderDrawList() {
     DrawList_t* current = client.DLhead;
     while (current != NULL) {
-        //SDL_RenderTexture(client.renderer, current->img, &current->srcRect, &current->destRect);
-        if (current->spr->window == 1)
+        if (current->spr->type == WINDOW)
             drawWindow(current->spr);
+        else if(current->spr->type == TEXT)
+            drawText(current->spr);
         else
             blitSprite(current->spr);
         current = current->next;
